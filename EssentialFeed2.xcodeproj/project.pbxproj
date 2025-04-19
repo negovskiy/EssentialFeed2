@@ -21,6 +21,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		554FC22B2DB39FE9000E619B /* EssentialFeed2.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed2.xctestplan; sourceTree = "<group>"; };
 		559DC9E92DB2661B002CB144 /* EssentialFeed2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		559DC9F12DB2661B002CB144 /* EssentialFeed2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeed2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -60,6 +61,7 @@
 		559DC9DF2DB2661B002CB144 = {
 			isa = PBXGroup;
 			children = (
+				554FC22B2DB39FE9000E619B /* EssentialFeed2.xctestplan */,
 				559DC9EB2DB2661B002CB144 /* EssentialFeed2 */,
 				559DC9F52DB2661B002CB144 /* EssentialFeed2Tests */,
 				559DC9EA2DB2661B002CB144 /* Products */,
