@@ -51,7 +51,7 @@ class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
         
-        URLSessionHTTPClient().get(from: url) { _ in }
+        makeSUT().get(from: url) { _ in }
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -81,6 +81,10 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     //MARK: - Helpers
+    
+    private func makeSUT() -> URLSessionHTTPClient {
+        URLSessionHTTPClient()
+    }
     
     private class URLProtocolStub: URLProtocol {
         
