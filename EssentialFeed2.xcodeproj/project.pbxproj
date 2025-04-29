@@ -35,6 +35,16 @@
 		559DC9F12DB2661B002CB144 /* EssentialFeed2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeed2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		5510A0322DC0C863005553F1 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2APIEndToEndTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Feed API/Helpers/XCTestCase+MemoryLeakTracking.swift",
+			);
+			target = 5510A0262DC0C347005553F1 /* EssentialFeed2APIEndToEndTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5510A0282DC0C347005553F1 /* EssentialFeed2APIEndToEndTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -48,6 +58,9 @@
 		};
 		559DC9F52DB2661B002CB144 /* EssentialFeed2Tests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5510A0322DC0C863005553F1 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2APIEndToEndTests" target */,
+			);
 			path = EssentialFeed2Tests;
 			sourceTree = "<group>";
 		};
