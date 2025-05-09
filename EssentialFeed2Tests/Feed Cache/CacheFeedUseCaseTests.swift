@@ -78,7 +78,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         let store: FeedStoreSpy = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: Date.init, store: store)
         
-        var receivedResults: [Error?] = []
+        var receivedResults: [LocalFeedLoader.SaveResult] = []
         sut?.save([uniqueItem()]) {
             receivedResults.append($0)
         }
@@ -93,7 +93,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         let store: FeedStoreSpy = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: Date.init, store: store)
         
-        var receivedResults: [Error?] = []
+        var receivedResults: [LocalFeedLoader.SaveResult] = []
         sut?.save([uniqueItem()]) {
             receivedResults.append($0)
         }
