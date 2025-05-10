@@ -42,7 +42,7 @@ public final class LocalFeedLoader {
 private extension Array where Element == FeedItem {
     func toLocal() -> [LocalFeedItem] {
         map {
-            LocalFeedItem(
+            .init(
                 id: $0.id,
                 description: $0.description,
                 location: $0.location,
