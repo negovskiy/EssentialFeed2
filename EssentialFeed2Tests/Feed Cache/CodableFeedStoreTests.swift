@@ -34,4 +34,25 @@ class CodableFeedStoreTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
     }
+    
+    func test_retrieve_hasNoSideEffectsOnEmptyCache() {
+        let sut = CodableFeedStore()
+        
+        let exp = expectation(description: "Wait for completion")
+        sut.retrieve { firstResult in
+            sut.retrieve { secondResult in
+                switch (firstResult, secondResult) {
+                case (.empty, .empty):
+                    break
+                    
+                default:
+                    XCTFail("Expected empty feed twice in a row, got: \n\t\(firstResult)\n\t\(secondResult)")
+                }
+                
+                exp.fulfill()
+            }
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
 }
