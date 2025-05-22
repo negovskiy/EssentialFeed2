@@ -67,6 +67,10 @@ class CodableFeedStore {
             completion(error)
         }
     }
+    
+    func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
+        completion(nil)
+    }
 }
 
 class CodableFeedStoreTests: XCTestCase {
@@ -158,6 +162,15 @@ class CodableFeedStoreTests: XCTestCase {
         XCTAssertNotNil(insertionError, "Expected insertion to fail")
     }
     
+    func test_delete_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
+        
+        let deletionError = delete(from: sut)
+        XCTAssertNil(deletionError, "Expected empty cache deletion to succeed without error")
+        
+        expect(sut, toRetrieve: .empty)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
@@ -178,6 +191,19 @@ class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1)
         
         return insertionError
+    }
+    
+    private func delete(from sut: CodableFeedStore, file: StaticString = #filePath, line: UInt = #line) -> Error? {
+        let exp = expectation(description: "Wait for completion")
+        var deletionError: Error?
+        sut.deleteCachedFeed { receivedDeletionError in
+            deletionError = receivedDeletionError
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+        
+        return deletionError
     }
     
     private func expect(
