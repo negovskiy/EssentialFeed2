@@ -175,7 +175,7 @@ class CodableFeedStoreTests: XCTestCase {
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
         
-        let deletionError = delete(from: sut)
+        let deletionError = deleteCache(from: sut)
         XCTAssertNil(deletionError, "Expected empty cache deletion to succeed without error")
         
         expect(sut, toRetrieve: .empty)
@@ -185,10 +185,19 @@ class CodableFeedStoreTests: XCTestCase {
         let sut = makeSUT()
         insert((uniqueImageFeed().local, Date()), to: sut)
         
-        let deletionError = delete(from: sut)
+        let deletionError = deleteCache(from: sut)
         XCTAssertNil(deletionError, "Expected empty cache deletion to succeed without error")
         
         expect(sut, toRetrieve: .empty)
+    }
+    
+    func test_delete_deliversErrorOnDeletionError() {
+        let noDeletePermissionURL = temporaryDirectory()
+        let sut = makeSUT(storeURL: noDeletePermissionURL)
+        
+        let deletionError = deleteCache(from: sut)
+        
+        XCTAssertNotNil(deletionError, "Expected deletion to fail")
     }
     
     // MARK: - Helpers
@@ -213,7 +222,7 @@ class CodableFeedStoreTests: XCTestCase {
         return insertionError
     }
     
-    private func delete(from sut: CodableFeedStore, file: StaticString = #filePath, line: UInt = #line) -> Error? {
+    private func deleteCache(from sut: CodableFeedStore, file: StaticString = #filePath, line: UInt = #line) -> Error? {
         let exp = expectation(description: "Wait for completion")
         var deletionError: Error?
         sut.deleteCachedFeed { receivedDeletionError in
@@ -264,7 +273,11 @@ class CodableFeedStoreTests: XCTestCase {
     }
     
     private func testSpecificStoreURL() -> URL {
-        FileManager.default.temporaryDirectory.appendingPathComponent("\(type(of: self)).store")
+        temporaryDirectory().appendingPathComponent("\(type(of: self)).store")
+    }
+    
+    private func temporaryDirectory() -> URL {
+        FileManager.default.temporaryDirectory
     }
     
     private func undoStoreSideEffects() {
