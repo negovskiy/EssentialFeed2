@@ -147,7 +147,7 @@ class CodableFeedStoreTests: XCTestCase {
             op3.fulfill()
         }
         
-        wait(for: [op1, op2, op3], timeout: 5)
+        waitForExpectations(timeout: 5)
         XCTAssertEqual(completedOperations, [op1, op2, op3], "Expected operations to run serially")
     }
     
