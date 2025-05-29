@@ -1,5 +1,5 @@
 //
-//  XCTestCase+FailableInsertFeedStoreSpecs.swift
+//  XCTestCase+FailableDeleteFeedStoreSpecs.swift
 //  EssentialFeed2
 //
 //  Created by Andrey Negovskiy on 5/29/25.
@@ -8,35 +8,29 @@
 import XCTest
 import EssentialFeed2
 
-extension FailableInsertFeedStoreSpecs where Self: XCTestCase {
+extension FailableDeleteFeedStoreSpecs where Self: XCTestCase {
     
-    func assertThatInsertDeliversErrorOnInsertionError(
+    func assertThatDeleteDeliversErrorOnDeletionError(
         on sut: FeedStore,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
-        
-        let insertionError = insert((feed, timestamp), to: sut)
+        let deletionError = deleteCache(from: sut)
         
         XCTAssertNotNil(
-            insertionError,
-            "Expected insertion to fail",
+            deletionError,
+            "Expected deletion to fail",
             file: file,
             line: line
         )
     }
     
-    func assertThatInsertHasNoSideEffectsOnInsertionError(
+    func assertThatDeleteHasNoSideEffectsOnDeletionError(
         on sut: FeedStore,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
-        
-        insert((feed, timestamp), to: sut)
+        deleteCache(from: sut)
         
         expect(
             sut,
