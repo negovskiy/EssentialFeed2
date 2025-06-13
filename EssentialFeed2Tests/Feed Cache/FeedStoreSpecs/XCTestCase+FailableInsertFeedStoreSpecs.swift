@@ -34,7 +34,7 @@ extension FailableDeleteFeedStoreSpecs where Self: XCTestCase {
         
         expect(
             sut,
-            toRetrieve: .empty,
+            toRetrieve: .success(.none),
             file: file,
             line: line
         )
