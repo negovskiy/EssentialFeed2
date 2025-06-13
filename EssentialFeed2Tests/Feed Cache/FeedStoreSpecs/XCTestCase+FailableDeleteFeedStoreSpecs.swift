@@ -40,7 +40,7 @@ extension FailableInsertFeedStoreSpecs where Self: XCTestCase {
         
         expect(
             sut,
-            toRetrieve: .success(.empty),
+            toRetrieve: .success(.none),
             file: file,
             line: line
         )
