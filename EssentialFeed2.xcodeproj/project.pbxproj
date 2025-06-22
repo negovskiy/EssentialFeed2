@@ -37,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		550DB4E02E07FC89008DA93E /* EssentialFeed2APIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed2APIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		5510A0272DC0C347005553F1 /* EssentialFeed2APIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeed2APIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5510A0332DC0C8B8005553F1 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		553766BD2DF3238F0034262D /* EssentialFeed2CacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeed2CacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +132,7 @@
 		559DC9DF2DB2661B002CB144 = {
 			isa = PBXGroup;
 			children = (
+				550DB4E02E07FC89008DA93E /* EssentialFeed2APIEndToEndTests.xctestplan */,
 				5510A0332DC0C8B8005553F1 /* CI.xctestplan */,
 				554FC22B2DB39FE9000E619B /* EssentialFeed2.xctestplan */,
 				553766C72DF323B90034262D /* EssentialFeed2CacheIntegrationTests.xctestplan */,
