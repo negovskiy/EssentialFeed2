@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "559DC9E82DB2661B002CB144"
-               BuildableName = "EssentialFeed2.framework"
-               BlueprintName = "EssentialFeed2"
+               BlueprintIdentifier = "550DB4E52E07FD22008DA93E"
+               BuildableName = "EssentialFeed2iOS.framework"
+               BlueprintName = "EssentialFeed2iOS"
                ReferencedContainer = "container:EssentialFeed2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,11 +30,8 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:EssentialFeed2.xctestplan"
+            reference = "container:EssentialFeed2iOS.xctestplan"
             default = "YES">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:CI_macOS.xctestplan">
          </TestPlanReference>
       </TestPlans>
    </TestAction>
@@ -58,9 +55,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "559DC9E82DB2661B002CB144"
-            BuildableName = "EssentialFeed2.framework"
-            BlueprintName = "EssentialFeed2"
+            BlueprintIdentifier = "550DB4E52E07FD22008DA93E"
+            BuildableName = "EssentialFeed2iOS.framework"
+            BlueprintName = "EssentialFeed2iOS"
             ReferencedContainer = "container:EssentialFeed2.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

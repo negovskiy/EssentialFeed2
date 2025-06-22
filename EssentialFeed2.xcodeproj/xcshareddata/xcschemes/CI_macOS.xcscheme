@@ -30,11 +30,8 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:EssentialFeed2.xctestplan"
+            reference = "container:CI_macOS.xctestplan"
             default = "YES">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:CI_macOS.xctestplan">
          </TestPlanReference>
       </TestPlans>
    </TestAction>
