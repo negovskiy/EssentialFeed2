@@ -68,6 +68,13 @@
 			);
 			target = 5510A0262DC0C347005553F1 /* EssentialFeed2APIEndToEndTests */;
 		};
+		55241B582E0C000E003B0759 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2iOSTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Helpers/XCTestCase+MemoryLeakTracking.swift",
+			);
+			target = 550DB4ED2E07FD22008DA93E /* EssentialFeed2iOSTests */;
+		};
 		553766C92DF326020034262D /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2CacheIntegrationTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -110,6 +117,7 @@
 			exceptions = (
 				5510A0322DC0C863005553F1 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2APIEndToEndTests" target */,
 				553766C92DF326020034262D /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2CacheIntegrationTests" target */,
+				55241B582E0C000E003B0759 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2iOSTests" target */,
 			);
 			path = EssentialFeed2Tests;
 			sourceTree = "<group>";
