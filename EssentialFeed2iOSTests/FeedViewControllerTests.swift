@@ -38,7 +38,7 @@ final class FeedViewControllerTests: XCTestCase {
         sut.simulateUserInitiatedFeedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator(), "Expected loading indicator to be visible")
     
-        loader.completeFeedLoading(at: 1)
+        loader.completeFeedLoadingWithError(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected loading indicator to be hidden")
     }
     
