@@ -63,15 +63,15 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
-    func test_pullToRefresh_loadsFeed() {
+    func test_userInitiatedReload_loadsFeed() {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
         
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(loader.loadCallCount, 2)
         
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(loader.loadCallCount, 3)
     }
     
@@ -80,7 +80,6 @@ final class FeedViewControllerTests: XCTestCase {
         
         sut.simulateAppearance()
         
-        print(sut.refreshControl.debugDescription)
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
     }
     
@@ -94,20 +93,20 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
     }
     
-    func test_pullToRefresh_showsLoadingIndicator() {
+    func test_userInitiatedReload_showsLoadingIndicator() {
         let (sut, _) = makeSUT()
         
         sut.simulateAppearance()
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedFeedReload()
         
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
     }
     
-    func test_pullToRefresh_hidesLoadingIndicatorOnLoaderCompletion() {
+    func test_userInitiatedReload_hidesLoadingIndicatorOnLoaderCompletion() {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedFeedReload()
         loader.completeFeedLoading()
         
         XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
@@ -154,7 +153,7 @@ private extension UIRefreshControl {
     }
 }
 
-private extension UITableViewController {
+private extension FeedViewController {
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()
@@ -198,5 +197,11 @@ private extension UITableViewController {
         override func endRefreshing() {
             _isRefreshing = false
         }
+    }
+}
+
+private extension FeedViewController {
+    func simulateUserInitiatedFeedReload() {
+        refreshControl?.simulatePullToRefresh()
     }
 }
