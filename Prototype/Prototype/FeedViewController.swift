@@ -15,7 +15,16 @@ struct FeedImageViewModel {
  
 class FeedViewController: UITableViewController {
     
-    private let feed = FeedImageViewModel.prototypeFeed
+    private var feed = [FeedImageViewModel]()
+    
+    @IBAction func refresh() { refreshTableView() }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        refresh()
+        tableView.setContentOffset(CGPoint(x: 0, y: -tableView.contentInset.top), animated: false)
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         feed.count
@@ -26,6 +35,19 @@ class FeedViewController: UITableViewController {
         let model = feed[indexPath.row]
         cell.configure(with: model)
         return cell
+    }
+    
+    private func refreshTableView() {
+        refreshControl?.beginRefreshing()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            if self.feed.isEmpty {
+                self.feed = FeedImageViewModel.prototypeFeed
+                self.tableView.reloadData()
+            }
+            
+            self.refreshControl?.endRefreshing()
+        }
     }
     
 }

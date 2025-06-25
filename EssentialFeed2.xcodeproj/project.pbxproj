@@ -68,6 +68,27 @@
 			);
 			target = 5510A0262DC0C347005553F1 /* EssentialFeed2APIEndToEndTests */;
 		};
+		55241B582E0C000E003B0759 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2iOSTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Helpers/XCTestCase+MemoryLeakTracking.swift",
+			);
+			target = 550DB4ED2E07FD22008DA93E /* EssentialFeed2iOSTests */;
+		};
+		55241B5B2E0C114E003B0759 /* Exceptions for "EssentialFeed2iOS" folder in "EssentialFeed2iOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				FeedViewController.swift,
+			);
+			target = 550DB4E52E07FD22008DA93E /* EssentialFeed2iOS */;
+		};
+		55241B5C2E0C114E003B0759 /* Exceptions for "EssentialFeed2iOS" folder in "EssentialFeed2iOSTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				FeedViewController.swift,
+			);
+			target = 550DB4ED2E07FD22008DA93E /* EssentialFeed2iOSTests */;
+		};
 		553766C92DF326020034262D /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2CacheIntegrationTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -82,6 +103,10 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		550DB4E72E07FD22008DA93E /* EssentialFeed2iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				55241B5B2E0C114E003B0759 /* Exceptions for "EssentialFeed2iOS" folder in "EssentialFeed2iOS" target */,
+				55241B5C2E0C114E003B0759 /* Exceptions for "EssentialFeed2iOS" folder in "EssentialFeed2iOSTests" target */,
+			);
 			path = EssentialFeed2iOS;
 			sourceTree = "<group>";
 		};
@@ -110,6 +135,7 @@
 			exceptions = (
 				5510A0322DC0C863005553F1 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2APIEndToEndTests" target */,
 				553766C92DF326020034262D /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2CacheIntegrationTests" target */,
+				55241B582E0C000E003B0759 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2iOSTests" target */,
 			);
 			path = EssentialFeed2Tests;
 			sourceTree = "<group>";
@@ -371,6 +397,7 @@
 					};
 					550DB4ED2E07FD22008DA93E = {
 						CreatedOnToolsVersion = 16.3;
+						LastSwiftMigration = 1630;
 					};
 					5510A0262DC0C347005553F1 = {
 						CreatedOnToolsVersion = 16.3;
@@ -601,6 +628,7 @@
 		550DB4F92E07FD22008DA93E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NYHBR423E7;
@@ -612,6 +640,7 @@
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -620,6 +649,7 @@
 		550DB4FA2E07FD22008DA93E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NYHBR423E7;
