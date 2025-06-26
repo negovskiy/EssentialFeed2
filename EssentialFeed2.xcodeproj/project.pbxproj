@@ -10,6 +10,7 @@
 		550DB4EF2E07FD22008DA93E /* EssentialFeed2iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 550DB4E62E07FD22008DA93E /* EssentialFeed2iOS.framework */; };
 		5510A02B2DC0C347005553F1 /* EssentialFeed2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 559DC9E92DB2661B002CB144 /* EssentialFeed2.framework */; };
 		553766C12DF3238F0034262D /* EssentialFeed2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 559DC9E92DB2661B002CB144 /* EssentialFeed2.framework */; };
+		558A75072E0D4CB70023F275 /* EssentialFeed2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 559DC9E92DB2661B002CB144 /* EssentialFeed2.framework */; platformFilter = ios; };
 		559DC9F22DB2661B002CB144 /* EssentialFeed2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 559DC9E92DB2661B002CB144 /* EssentialFeed2.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,13 @@
 			remoteInfo = EssentialFeed2;
 		};
 		553766C22DF3238F0034262D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 559DC9E02DB2661B002CB144 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 559DC9E82DB2661B002CB144;
+			remoteInfo = EssentialFeed2;
+		};
+		558A75092E0D4CB70023F275 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 559DC9E02DB2661B002CB144 /* Project object */;
 			proxyType = 1;
@@ -129,6 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				558A75072E0D4CB70023F275 /* EssentialFeed2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,6 +183,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		558A75062E0D4CB70023F275 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		559DC9DF2DB2661B002CB144 = {
 			isa = PBXGroup;
 			children = (
@@ -189,6 +205,7 @@
 				553766BE2DF3238F0034262D /* EssentialFeed2CacheIntegrationTests */,
 				550DB4E72E07FD22008DA93E /* EssentialFeed2iOS */,
 				550DB4F22E07FD22008DA93E /* EssentialFeed2iOSTests */,
+				558A75062E0D4CB70023F275 /* Frameworks */,
 				559DC9EA2DB2661B002CB144 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -238,6 +255,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				558A750A2E0D4CB70023F275 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				550DB4E72E07FD22008DA93E /* EssentialFeed2iOS */,
@@ -526,6 +544,12 @@
 			isa = PBXTargetDependency;
 			target = 559DC9E82DB2661B002CB144 /* EssentialFeed2 */;
 			targetProxy = 553766C22DF3238F0034262D /* PBXContainerItemProxy */;
+		};
+		558A750A2E0D4CB70023F275 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = 559DC9E82DB2661B002CB144 /* EssentialFeed2 */;
+			targetProxy = 558A75092E0D4CB70023F275 /* PBXContainerItemProxy */;
 		};
 		559DC9F42DB2661B002CB144 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
