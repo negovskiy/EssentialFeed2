@@ -8,15 +8,28 @@
 import UIKit
 import EssentialFeed2
 
-final public class FeedViewController: UITableViewController {
+public protocol FeedImageDataLoaderTask {
+    func cancel()
+}
+
+public protocol FeedImageDataLoader {
+    typealias Result = Swift.Result<Data, Error>
     
-    var loader: FeedLoader?
+    func loadImageData(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask
+}
+
+final public class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
     
     private var onViewDidAppear: ((FeedViewController) -> Void)?
+    private var tableModel = [FeedImage]()
+    private var feedLoader: FeedLoader?
+    private var imageLoader: FeedImageDataLoader?
+    private var tasks: [IndexPath: FeedImageDataLoaderTask] = [:]
     
-    public convenience init(loader: FeedLoader) {
+    public convenience init(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
         self.init()
-        self.loader = loader
+        self.feedLoader = feedLoader
+        self.imageLoader = imageLoader
     }
     
     public override func viewDidLoad() {
@@ -24,6 +37,7 @@ final public class FeedViewController: UITableViewController {
         
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        tableView.prefetchDataSource = self
         
         onViewDidAppear = { vc in
             vc.onViewDidAppear = nil
@@ -40,8 +54,68 @@ final public class FeedViewController: UITableViewController {
     @objc private func load() {
         refreshControl?.beginRefreshing()
         
-        loader?.load { [weak self] _ in
+        feedLoader?.load { [weak self] result in
+            if let feed = try? result.get() {
+                self?.tableModel = feed
+                self?.tableView.reloadData()
+            }
+            
             self?.refreshControl?.endRefreshing()
         }
     }
+    
+    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        tableModel.count
+    }
+    
+    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cellModel = tableModel[indexPath.row]
+        let cell = FeedImageCell()
+        
+        cell.locationContainer.isHidden = cellModel.location == nil
+        cell.locationLabel.text = cellModel.location
+        cell.descriptionLabel.text = cellModel.description
+        cell.feedImageView.image = nil
+        cell.feedImageRetryButton.isHidden = true
+        cell.feedImageContainer.startShimmering()
+        
+        let loadImage = { [weak self, weak cell] in
+            guard let cell, let self else { return }
+            
+            tasks[indexPath] = imageLoader?.loadImageData(from: cellModel.url) { [weak cell] result in
+                let data = try? result.get()
+                let image = data.map(UIImage.init) ?? nil
+                
+                cell?.feedImageRetryButton.isHidden = image != nil
+                cell?.feedImageView.image = image
+                cell?.feedImageContainer.stopShimmering()
+            }
+        }
+        
+        loadImage()
+        cell.onRetry = loadImage
+        
+        return cell
+    }
+    
+    public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cancelTask(forRowAt: indexPath)
+    }
+    
+    public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach {
+            let cellModel = tableModel[$0.row]
+            tasks[$0] = imageLoader?.loadImageData(from: cellModel.url) { _ in }
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach(cancelTask)
+    }
+    
+    private func cancelTask(forRowAt indexPath: IndexPath) {
+        tasks[indexPath]?.cancel()
+        tasks[indexPath] = nil
+    }
+    
 }
