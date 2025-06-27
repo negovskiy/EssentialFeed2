@@ -15,8 +15,9 @@ public enum FeedUIComposer {
         imageLoader: FeedImageDataLoader
     ) -> FeedViewController {
         
-        let presenter = FeedPresenter(feedLoader: feedLoader)
-        let refreshController = FeedRefreshViewController(loadFeed: presenter.loadFeed)
+        let presenter = FeedPresenter()
+        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader, presenter: presenter)
+        let refreshController = FeedRefreshViewController(loadFeed: presentationAdapter.loadFeed)
         let feedController = FeedViewController(refreshController: refreshController)
         
         presenter.loadingView = WeakRefVirtualProxy(refreshController)
@@ -60,6 +61,28 @@ private final class FeedViewAdapter: FeedView {
                 imageTransformer: UIImage.init
             )
             return FeedImageCellController(viewModel: viewModel)
+        }
+    }
+}
+
+private final class FeedLoaderPresentationAdapter {
+    private let feedLoader: FeedLoader
+    private let presenter: FeedPresenter
+    
+    init(feedLoader: FeedLoader, presenter: FeedPresenter) {
+        self.feedLoader = feedLoader
+        self.presenter = presenter
+    }
+    
+    func loadFeed() {
+        presenter.didStartLoadingFeed()
+        feedLoader.load { [weak presenter] result in
+            switch result {
+            case let .success(feed):
+                presenter?.didFinishLoadingFeed(feed)
+            case let .failure(error):
+                presenter?.didFinishLoadingFeedWithError(error)
+            }
         }
     }
 }

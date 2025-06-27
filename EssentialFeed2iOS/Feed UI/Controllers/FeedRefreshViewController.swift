@@ -5,7 +5,6 @@
 //  Created by Andrey Negovskiy on 6/26/25.
 //
 
-
 import UIKit
 
 final public class FeedRefreshViewController: NSObject, FeedLoadingView {
