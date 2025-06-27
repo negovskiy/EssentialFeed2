@@ -15,10 +15,11 @@ public enum FeedUIComposer {
         imageLoader: FeedImageDataLoader
     ) -> FeedViewController {
         
-        let refreshController = FeedRefreshViewController(feedLoader: feedLoader)
+        let feedViewModel = FeedViewModel(feedLoader: feedLoader)
+        let refreshController = FeedRefreshViewController(viewModel: feedViewModel)
         let feedController = FeedViewController(refreshController: refreshController)
         
-        refreshController.onRefresh = adaptFeedToCellControllers(
+        feedViewModel.onFeedLoad = adaptFeedToCellControllers(
             forwardingTo: feedController,
             loader: imageLoader
         )
@@ -32,7 +33,12 @@ public enum FeedUIComposer {
     ) -> ([FeedImage]) -> Void {
         { [weak controller] feed in
             controller?.tableModel = feed.map { model in
-                FeedImageCellController(model: model, imageLoader: loader)
+                let viewModel = FeedImageViewModel(
+                    model: model,
+                    imageLoader: loader,
+                    imageTransformer: UIImage.init
+                )
+                return FeedImageCellController(viewModel: viewModel)
             }
         }
     }
