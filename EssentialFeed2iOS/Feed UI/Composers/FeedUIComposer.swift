@@ -15,13 +15,14 @@ public enum FeedUIComposer {
         imageLoader: FeedImageDataLoader
     ) -> FeedViewController {
         
-        let presenter = FeedPresenter()
-        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader, presenter: presenter)
+        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
         let refreshController = FeedRefreshViewController(delegate: presentationAdapter)
         let feedController = FeedViewController(refreshController: refreshController)
         
-        presenter.loadingView = WeakRefVirtualProxy(refreshController)
-        presenter.feedView = FeedViewAdapter(controller: feedController, imageLoader: imageLoader)
+        presentationAdapter.presenter = FeedPresenter(
+            loadingView: WeakRefVirtualProxy(refreshController),
+            feedView: FeedViewAdapter(controller: feedController, imageLoader: imageLoader)
+        )
         
         return feedController
     }
@@ -67,16 +68,15 @@ private final class FeedViewAdapter: FeedView {
 
 private final class FeedLoaderPresentationAdapter: FeedRefreshViewControllerDelegate {
     
+    var presenter: FeedPresenter?
     private let feedLoader: FeedLoader
-    private let presenter: FeedPresenter
     
-    init(feedLoader: FeedLoader, presenter: FeedPresenter) {
+    init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
-        self.presenter = presenter
     }
     
     func didRequestFeedRefresh() {
-        presenter.didStartLoadingFeed()
+        presenter?.didStartLoadingFeed()
         feedLoader.load { [weak presenter] result in
             switch result {
             case let .success(feed):
