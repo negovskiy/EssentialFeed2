@@ -17,8 +17,8 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
     
     private var onViewDidAppear: ((FeedViewController) -> Void)?
     
-    convenience init(refreshController: FeedRefreshViewController) {
-        self.init()
+    convenience init?(coder: NSCoder, refreshController: FeedRefreshViewController) {
+        self.init(coder: coder)
         self.refreshController = refreshController
     }
     
