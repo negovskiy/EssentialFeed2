@@ -7,9 +7,17 @@
 
 import UIKit
 
-final public class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
+protocol FeedViewControllerDelegate {
+    func didRequestFeedRefresh()
+}
+
+final public class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView {
     
-    private(set) public var refreshController: FeedRefreshViewController?
+    @IBAction private func refresh() {
+        delegate?.didRequestFeedRefresh()
+    }
+    
+    var delegate: FeedViewControllerDelegate?
     
     var tableModel = [FeedImageCellController]() {
         didSet { tableView.reloadData() }
@@ -17,20 +25,17 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
     
     private var onViewDidAppear: ((FeedViewController) -> Void)?
     
-    convenience init(refreshController: FeedRefreshViewController) {
-        self.init()
-        self.refreshController = refreshController
+    convenience init?(coder: NSCoder, delegate: FeedViewControllerDelegate) {
+        self.init(coder: coder)
+        self.delegate = delegate
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        refreshControl = refreshController?.view
-        tableView.prefetchDataSource = self
-        
+                
         onViewDidAppear = { vc in
             vc.onViewDidAppear = nil
-            vc.refreshController?.refresh()
+            vc.refresh()
         }
     }
     
@@ -40,12 +45,20 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
         onViewDidAppear?(self)
     }
     
+    func display(_ viewModel: FeedLoadingViewModel) {
+        if viewModel.isLoading {
+            refreshControl?.beginRefreshing()
+        } else {
+            refreshControl?.endRefreshing()
+        }
+    }
+    
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableModel.count
     }
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        cellController(forRowAt: indexPath).view()
+        cellController(forRowAt: indexPath).view(in: tableView)
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
