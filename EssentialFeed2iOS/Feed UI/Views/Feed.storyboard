@@ -125,6 +125,7 @@ Location</string>
                         <connections>
                             <outlet property="dataSource" destination="UNR-fX-mxa" id="6rt-Lu-Sct"/>
                             <outlet property="delegate" destination="UNR-fX-mxa" id="YGG-MO-SeA"/>
+                            <outlet property="prefetchDataSource" destination="UNR-fX-mxa" id="t3K-R6-Up3"/>
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="2jc-h7-WZ2">
