@@ -10,7 +10,7 @@ import UIKit
 import EssentialFeed2
 import EssentialFeed2iOS
 
-final class FeedViewControllerTests: XCTestCase {
+final class FeedUIIntegrationTests: XCTestCase {
     
     func test_feedView_hasTitle() {
         let (sut, _) = makeSUT()
@@ -454,35 +454,7 @@ private extension FeedViewController {
     }
 }
 
-private extension FeedImageCell {
-    var isShowingLocation: Bool {
-        !locationContainer.isHidden
-    }
-    
-    var isShowingImageLoadingIndicator: Bool {
-        feedImageContainer.isShimmering
-    }
-    
-    var isShowingRetryAction: Bool {
-        !feedImageRetryButton.isHidden
-    }
-    
-    var locationText: String? {
-        locationLabel.text
-    }
-    
-    var descriptionText: String? {
-        descriptionLabel.text
-    }
-    
-    var renderedImage: Data? {
-        feedImageView.image?.pngData()
-    }
-    
-    func simulateRetryAction() {
-        feedImageRetryButton.simulateTap()
-    }
-}
+
 
 private extension UIButton {
     func simulateTap() {
