@@ -53,18 +53,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		550DB4E02E07FC89008DA93E /* EssentialFeed2APIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed2APIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		550DB4E62E07FD22008DA93E /* EssentialFeed2iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed2iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		550DB4EE2E07FD22008DA93E /* EssentialFeed2iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeed2iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		550DB4FB2E07FE1A008DA93E /* EssentialFeed2iOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed2iOS.xctestplan; sourceTree = "<group>"; };
 		5510A0272DC0C347005553F1 /* EssentialFeed2APIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeed2APIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5510A0332DC0C8B8005553F1 /* CI_macOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_macOS.xctestplan; sourceTree = "<group>"; };
 		553766BD2DF3238F0034262D /* EssentialFeed2CacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeed2CacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		553766C72DF323B90034262D /* EssentialFeed2CacheIntegrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed2CacheIntegrationTests.xctestplan; sourceTree = "<group>"; };
-		554FC22B2DB39FE9000E619B /* EssentialFeed2.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed2.xctestplan; sourceTree = "<group>"; };
 		559DC9E92DB2661B002CB144 /* EssentialFeed2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		559DC9F12DB2661B002CB144 /* EssentialFeed2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeed2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		55B5E22F2E08031D00322834 /* CI_iOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_iOS.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -130,6 +124,11 @@
 			path = EssentialFeed2Tests;
 			sourceTree = "<group>";
 		};
+		55F27DF72E116F3A004A2993 /* Test Plans */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Test Plans";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,12 +192,7 @@
 		559DC9DF2DB2661B002CB144 = {
 			isa = PBXGroup;
 			children = (
-				55B5E22F2E08031D00322834 /* CI_iOS.xctestplan */,
-				5510A0332DC0C8B8005553F1 /* CI_macOS.xctestplan */,
-				554FC22B2DB39FE9000E619B /* EssentialFeed2.xctestplan */,
-				550DB4E02E07FC89008DA93E /* EssentialFeed2APIEndToEndTests.xctestplan */,
-				553766C72DF323B90034262D /* EssentialFeed2CacheIntegrationTests.xctestplan */,
-				550DB4FB2E07FE1A008DA93E /* EssentialFeed2iOS.xctestplan */,
+				55F27DF72E116F3A004A2993 /* Test Plans */,
 				559DC9EB2DB2661B002CB144 /* EssentialFeed2 */,
 				559DC9F52DB2661B002CB144 /* EssentialFeed2Tests */,
 				5510A0282DC0C347005553F1 /* EssentialFeed2APIEndToEndTests */,
@@ -390,7 +384,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					550DB4E52E07FD22008DA93E = {
 						CreatedOnToolsVersion = 16.3;
@@ -421,6 +415,8 @@
 			knownRegions = (
 				en,
 				Base,
+				"pt-BR",
+				el,
 			);
 			mainGroup = 559DC9DF2DB2661B002CB144;
 			minimizedProjectReferenceProxies = 1;
@@ -564,6 +560,7 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NYHBR423E7;
@@ -602,6 +599,7 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NYHBR423E7;
@@ -742,6 +740,7 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -775,6 +774,7 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -865,6 +865,7 @@
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -927,6 +928,7 @@
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
