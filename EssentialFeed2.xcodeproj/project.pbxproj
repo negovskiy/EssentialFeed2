@@ -416,6 +416,7 @@
 				en,
 				Base,
 				"pt-BR",
+				el,
 			);
 			mainGroup = 559DC9DF2DB2661B002CB144;
 			minimizedProjectReferenceProxies = 1;

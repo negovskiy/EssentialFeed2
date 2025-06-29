@@ -4,6 +4,12 @@
     "FEED_VIEW_TITLE" : {
       "comment" : "Title for the feed view",
       "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Feed μου"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
