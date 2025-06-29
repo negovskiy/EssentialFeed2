@@ -22,6 +22,7 @@ public enum FeedUIComposer {
         let feedController = storyboard.instantiateInitialViewController { coder in
             FeedViewController(coder: coder, delegate: presentationAdapter)
         }!
+        feedController.title = FeedPresenter.title
         
         presentationAdapter.presenter = FeedPresenter(
             loadingView: WeakRefVirtualProxy(feedController),
