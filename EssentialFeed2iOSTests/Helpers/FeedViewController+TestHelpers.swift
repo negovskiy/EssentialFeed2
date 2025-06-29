@@ -10,7 +10,7 @@ import EssentialFeed2iOS
 
 extension FeedViewController {
     func simulateUserInitiatedFeedReload() {
-        refreshControl?.simulatePullToRefresh()
+        refreshControl?.simulate(event: .valueChanged)
     }
     
     @discardableResult
