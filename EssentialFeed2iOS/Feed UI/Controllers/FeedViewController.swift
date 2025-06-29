@@ -32,6 +32,8 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "My Feed"
                 
         onViewDidAppear = { vc in
             vc.onViewDidAppear = nil
