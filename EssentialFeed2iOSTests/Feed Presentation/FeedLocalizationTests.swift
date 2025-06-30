@@ -19,7 +19,6 @@ final class FeedLocalizationTests: XCTestCase {
         localizationBundles.forEach { (bundle, localization) in
             localizedStringKeys.forEach { key in
                 let localizedString = bundle.localizedString(forKey: key, value: nil, table: table)
-                print(localizedString)
                 
                 if localizedString == key {
                     let language = Locale.current.localizedString(forLanguageCode: localization) ?? ""

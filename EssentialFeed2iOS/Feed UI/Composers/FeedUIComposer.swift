@@ -15,6 +15,7 @@ public enum FeedUIComposer {
         imageLoader: FeedImageDataLoader
     ) -> FeedViewController {
         
+        let feedLoader = MainQueueDispatchDecorator(decoratee: feedLoader)
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
         let feedController = FeedViewController.makeWith(
             delegate: presentationAdapter,
@@ -117,5 +118,25 @@ private final class FeedImageDataLoadingPresentationAdapter<View: FeedImageView,
     
     func didCancelImageRequest() {
         task?.cancel()
+    }
+}
+
+private final class MainQueueDispatchDecorator: FeedLoader {
+    private let decoratee: FeedLoader
+    
+    init(decoratee: FeedLoader) {
+        self.decoratee = decoratee
+    }
+    
+    func load(completion: @escaping (FeedLoader.Result) -> Void) {
+        decoratee.load { result in
+            if Thread.isMainThread {
+                completion(result)
+            } else {
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            }
+        }
     }
 }
