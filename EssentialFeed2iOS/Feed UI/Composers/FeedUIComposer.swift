@@ -19,7 +19,7 @@ public enum FeedUIComposer {
         let imageLoader = MainQueueDispatchDecorator(decoratee: imageLoader)
         
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
-        let feedController = FeedViewController.makeWith(
+        let feedController = makeWith(
             delegate: presentationAdapter,
             title: FeedPresenter.title
         )
@@ -31,10 +31,8 @@ public enum FeedUIComposer {
         
         return feedController
     }
-}
-
-private extension FeedViewController {
-    static func makeWith(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
+    
+    private static func makeWith(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
         let bundle = Bundle(for: FeedViewController.self)
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
         let feedController = storyboard.instantiateInitialViewController { coder in
