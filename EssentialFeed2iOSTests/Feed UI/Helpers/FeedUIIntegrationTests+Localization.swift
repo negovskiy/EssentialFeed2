@@ -7,12 +7,12 @@
 
 import Foundation
 import XCTest
-import EssentialFeed2iOS
+import EssentialFeed2
 
 extension FeedUIIntegrationTests {
     func localized( _ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
         let table = "Feed"
-        let bundle = Bundle(for: FeedViewController.self)
+        let bundle = Bundle(for: FeedPresenter.self)
         let value = String(localized: String.LocalizationValue(key), table: table, bundle: bundle)
         
         if key == value {
