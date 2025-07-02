@@ -12,6 +12,8 @@ public final class ErrorView: UIView {
     
     @IBOutlet private var label: UILabel!
     
+    @IBAction private func tapAction() { hideMessageAnimated() }
+    
     public var message: String? {
         get { isVisible ? label.text : nil }
         set { setMessageAnimated(newValue) }
