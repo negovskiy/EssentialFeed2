@@ -44,6 +44,15 @@ public class FeedPresenter {
     private let feedView: FeedView
     private let errorView: FeedErrorView
     
+    public static var title: String {
+        String(
+            localized: "FEED_VIEW_TITLE",
+            table: "Feed",
+            bundle: Bundle(for: FeedPresenter.self),
+            comment: "Title for the feed view"
+        )
+    }
+    
     private var feedLoadError: String {
         String(
             localized: "FEED_VIEW_CONNECTION_ERROR",
