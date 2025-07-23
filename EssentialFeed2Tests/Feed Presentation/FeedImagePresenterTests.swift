@@ -26,9 +26,11 @@ protocol FeedImageView {
 
 class FeedImagePresenter {
     private let view: FeedImageView
+    private let imageTransformer: (Data) -> Any?
     
-    init(view: FeedImageView) {
+    init(view: FeedImageView, imageTransformer: @escaping (Data) -> Any?) {
         self.view = view
+        self.imageTransformer = imageTransformer
     }
     
     func didStartLoadingImageData(for model: FeedImage) {
@@ -39,6 +41,18 @@ class FeedImagePresenter {
                 image: nil,
                 isLoading: true,
                 shouldRetry: false
+            )
+        )
+    }
+    
+    func didFinishLoadingImageData(with data: Data, for model: FeedImage) {
+        view.display(
+            .init(
+                description: model.description,
+                location: model.location,
+                image: imageTransformer(data),
+                isLoading: false,
+                shouldRetry: true
             )
         )
     }
@@ -66,14 +80,30 @@ class FeedImagePresenterTests: XCTestCase {
         XCTAssertNil(message?.image)
     }
     
+    func test_didFinishLoadingImageData_displaysRetryOnFailedImageTransformation() {
+        let (sut, view) = makeSUT()
+        let image = uniqueImage()
+        let data = Data()
+        
+        sut.didFinishLoadingImageData(with: data, for: image)
+        
+        XCTAssertEqual(view.messages.count, 1)
+        let message = view.messages.first
+        XCTAssertEqual(message?.description, image.description)
+        XCTAssertEqual(message?.location, image.location)
+        XCTAssertEqual(message?.isLoading, false)
+        XCTAssertEqual(message?.shouldRetry, true)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
+        imageTransformer: @escaping (Data) -> Any? = { _ in nil },
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (FeedImagePresenter, ViewSpy) {
         let view = ViewSpy()
-        let sut = FeedImagePresenter(view: view)
+        let sut = FeedImagePresenter(view: view, imageTransformer: imageTransformer)
         trackForMemoryLeaks(view)
         trackForMemoryLeaks(sut)
         return (sut, view)
