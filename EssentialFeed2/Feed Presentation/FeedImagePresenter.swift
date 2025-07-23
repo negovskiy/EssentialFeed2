@@ -2,11 +2,10 @@
 //  FeedImagePresenter.swift
 //  EssentialFeed2
 //
-//  Created by Andrey Negovskiy on 6/27/25.
+//  Created by Andrey Negovskiy on 7/23/25.
 //
 
 import Foundation
-import EssentialFeed2
 
 public protocol FeedImageView {
     associatedtype Image
@@ -14,8 +13,7 @@ public protocol FeedImageView {
     func display(_ model: FeedImageViewModel<Image>)
 }
 
-public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
-    
+public class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
     private let view: View
     private let imageTransformer: (Data) -> Image?
     
@@ -24,7 +22,7 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
         self.imageTransformer = imageTransformer
     }
     
-    func didStartLoadingImageData(for model: FeedImage) {
+    public func didStartLoadingImageData(for model: FeedImage) {
         view.display(
             .init(
                 description: model.description,
@@ -36,25 +34,20 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
         )
     }
     
-    private struct InvalidImageDataError: Error {}
-    
-    func didFinishLoadingImageData(with data: Data, for model: FeedImage) {
-        guard let image = imageTransformer(data) else {
-            return didFinishLoadingImageData(withError: InvalidImageDataError(), for: model)
-        }
-        
+    public func didFinishLoadingImageData(with data: Data, for model: FeedImage) {
+        let image = imageTransformer(data)
         view.display(
             .init(
                 description: model.description,
                 location: model.location,
                 image: image,
                 isLoading: false,
-                shouldRetry: false
+                shouldRetry: image == nil
             )
         )
     }
     
-    func didFinishLoadingImageData(withError error: Error, for model: FeedImage) {
+    public func didFinishLoadingImageData(withError error: Error, for model: FeedImage) {
         view.display(
             .init(
                 description: model.description,
