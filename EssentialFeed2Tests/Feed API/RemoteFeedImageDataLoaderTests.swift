@@ -9,6 +9,11 @@ import XCTest
 import EssentialFeed2
 
 class RemoteFeedImageDataLoader {
+    
+    public enum Error: Swift.Error {
+        case invalidData
+    }
+    
     private let client: HTTPClient
     
     init(client: HTTPClient) {
@@ -18,10 +23,10 @@ class RemoteFeedImageDataLoader {
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) {
         client.get(from: url) { result in
             switch result {
+            case .success:
+                completion(.failure(Error.invalidData))
             case let .failure(error):
                 completion(.failure(error))
-            default:
-                break
             }
         }
     }
@@ -63,6 +68,18 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
         }
         
         XCTAssertEqual(client.requestedURLs, [url])
+    }
+    
+    func test_loadImageDataFromURL_deliversInvalidDataErrorOnNon200HTPPResponse() {
+        let (sut, client) = makeSUT()
+        
+        let samples = [199, 201, 300, 400, 500]
+        
+        for (index, code) in samples.enumerated() {
+            expect(sut, toCompleteWithResult: failure(.invalidData)) {
+                client.complete(with: code, data: anyData(), at: index)
+            }
+        }
     }
     
     // MARK: - Helpers
@@ -124,8 +141,27 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
             messages.append((url, completion))
         }
         
+        func complete(with statusCode: Int, data: Data, at index: Int = 0) {
+            let response = HTTPURLResponse(
+                url: requestedURLs[index],
+                statusCode: statusCode,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            
+            messages[index].completion(.success((data, response)))
+        }
+        
         func complete(with error: Error, at index: Int = 0) {
             messages[index].completion(.failure(error))
         }
+    }
+    
+    private func anyData() -> Data {
+        Data("any data".utf8)
+    }
+    
+    private func failure(_ error: RemoteFeedImageDataLoader.Error) -> FeedImageDataLoader.Result {
+        .failure(error)
     }
 }
