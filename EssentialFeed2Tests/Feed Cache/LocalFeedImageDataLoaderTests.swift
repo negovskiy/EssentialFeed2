@@ -15,8 +15,24 @@ protocol FeedImageDataStore {
 }
 
 class LocalFeedImageDataLoader {
-    private struct Task: FeedImageDataLoaderTask {
-        func cancel() {}
+    private final class Task: FeedImageDataLoaderTask {
+        private var completion: ((FeedImageDataLoader.Result) -> Void)?
+        
+        init(_ completion: ((FeedImageDataLoader.Result) -> Void)? = nil) {
+            self.completion = completion
+        }
+        
+        func complete(with result: FeedImageDataLoader.Result) {
+            completion?(result)
+        }
+        
+        func cancel() {
+            preventFurtherCompletion()
+        }
+        
+        private func preventFurtherCompletion() {
+            completion = nil
+        }
     }
     
     public enum Error: Swift.Error {
@@ -34,17 +50,16 @@ class LocalFeedImageDataLoader {
         from url: URL,
         completion: @escaping ((FeedImageDataLoader.Result) -> Void)
     ) -> FeedImageDataLoaderTask {
+        let task = Task(completion)
         store.retrieve(dataFor: url) { result in
-            completion(
-                result
-                    .mapError { _ in Error.failed }
-                    .flatMap { data in
-                        data.map { .success($0) } ?? .failure(Error.notFound)
-                    }
-            )
+            task.complete(with: result
+                .mapError { _ in Error.failed }
+                .flatMap { data in
+                    data.map { .success($0) } ?? .failure(Error.notFound)
+                })
         }
         
-        return Task()
+        return task
     }
 }
 
@@ -88,6 +103,23 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         expect(sut, toCompleteWith: .success(data), when: {
             store.complete(with: data)
         })
+    }
+    
+    func test_loadImageDataFromURL_doesNotDeliverResultAfterCancellingTask() {
+        let (sut, store) = makeSUT()
+        let foundData = anyData()
+        
+        var received = [FeedImageDataLoader.Result]()
+        let task = sut.loadImageData(from: anyURL()) {
+            received.append($0)
+        }
+        task.cancel()
+        
+        store.complete(with: foundData)
+        store.complete(with: .none)
+        store.complete(with: anyNSError())
+        
+        XCTAssertTrue(received.isEmpty, "Expected no completion, but got \(received) instead.")
     }
     
     // MARK: - Helpers
