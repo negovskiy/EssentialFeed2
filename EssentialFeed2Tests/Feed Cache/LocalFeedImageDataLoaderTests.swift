@@ -51,7 +51,9 @@ class LocalFeedImageDataLoader {
         completion: @escaping ((FeedImageDataLoader.Result) -> Void)
     ) -> FeedImageDataLoaderTask {
         let task = Task(completion)
-        store.retrieve(dataFor: url) { result in
+        store.retrieve(dataFor: url) { [weak self] result in
+            guard self != nil else { return }
+            
             task.complete(with: result
                 .mapError { _ in Error.failed }
                 .flatMap { data in
@@ -118,6 +120,21 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         store.complete(with: foundData)
         store.complete(with: .none)
         store.complete(with: anyNSError())
+        
+        XCTAssertTrue(received.isEmpty, "Expected no completion, but got \(received) instead.")
+    }
+    
+    func test_loadImageDataFromURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        let store = StoreSpy()
+        var sut: LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
+        
+        var received = [FeedImageDataLoader.Result]()
+        _ = sut?.loadImageData(from: anyURL()) {
+            received.append($0)
+        }
+        
+        sut = nil
+        store.complete(with: .none)
         
         XCTAssertTrue(received.isEmpty, "Expected no completion, but got \(received) instead.")
     }
