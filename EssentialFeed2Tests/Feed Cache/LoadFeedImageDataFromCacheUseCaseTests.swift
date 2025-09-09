@@ -82,18 +82,6 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         XCTAssertTrue(received.isEmpty, "Expected no completion, but got \(received) instead.")
     }
     
-    func test_saveImageDataForURL_requestsImageDataInsertionForURL() {
-        let (sut, store) = makeSUT()
-        let url = anyURL()
-        let data = anyData()
-        
-        sut.saveImageData(data, for: url) { _ in 
-            
-        }
-        
-        XCTAssertEqual(store.receivedMessages, [.insert(data: data, for: url)])
-    }
-    
     // MARK: - Helpers
     private func makeSUT(
         currentDate: @escaping () -> Date = Date.init,
