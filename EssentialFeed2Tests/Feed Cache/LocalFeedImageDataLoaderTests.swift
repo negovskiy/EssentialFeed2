@@ -82,6 +82,16 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         XCTAssertTrue(received.isEmpty, "Expected no completion, but got \(received) instead.")
     }
     
+    func test_saveImageDataForURL_requestsImageDataInsertionForURL() {
+        let (sut, store) = makeSUT()
+        let url = anyURL()
+        let data = anyData()
+        
+        sut.saveImageData(data, for: url)
+        
+        XCTAssertEqual(store.receivedMessages, [.insert(data: data, for: url)])
+    }
+    
     // MARK: - Helpers
     private func makeSUT(
         currentDate: @escaping () -> Date = Date.init,
@@ -139,13 +149,18 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
     
     private class StoreSpy: FeedImageDataStore {
         enum Message: Equatable {
+            case insert(data: Data, for: URL)
             case retrieve(dataFor: URL)
         }
         
         private(set) var receivedMessages: [Message] = []
-        private var completions: [(FeedImageDataStore.Result) -> Void] = []
+        private var completions: [(FeedImageDataStore.RetrievalResult) -> Void] = []
         
-        func retrieve(dataFor url: URL, completion: @escaping (FeedImageDataStore.Result) -> Void) {
+        func insert(_ data: Data, for url: URL, completion: @escaping (InsertionResult) -> Void) {
+            receivedMessages.append(.insert(data: data, for: url))
+        }
+        
+        func retrieve(dataFor url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
             completions.append(completion)
             receivedMessages.append(.retrieve(dataFor: url))
         }
