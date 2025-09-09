@@ -97,17 +97,17 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         return (sut, storeSpy)
     }
     
-    private func failed() -> FeedImageDataLoader.Result {
+    private func failed() -> LocalFeedImageDataLoader.LoadResult {
         .failure(LocalFeedImageDataLoader.LoadError.failed)
     }
     
-    private func notFound() -> FeedImageDataLoader.Result {
+    private func notFound() -> LocalFeedImageDataLoader.LoadResult {
         .failure(LocalFeedImageDataLoader.LoadError.notFound)
     }
     
     private func expect(
         _ sut: LocalFeedImageDataLoader,
-        toCompleteWith expectedResult: FeedImageDataLoader.Result,
+        toCompleteWith expectedResult: LocalFeedImageDataLoader.LoadResult,
         when action: () -> Void,
         file: StaticString = #filePath,
         line: UInt = #line
