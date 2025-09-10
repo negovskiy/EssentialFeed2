@@ -47,6 +47,26 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
         expect(sut, toCompleteRetrievedWith: found(secondData), for: matchingURL)
     }
     
+    func test_sideEffects_runSerially() {
+        let sut = try! makeSUT()
+        let url = anyURL()
+        
+        let firstExpectation = expectation(description: "First")
+        sut.insert([localImage(url: url)], .now) { _ in firstExpectation.fulfill() }
+        
+        let secondExpectation = expectation(description: "Second")
+        sut.insert(anyData(), for: url) { _ in secondExpectation.fulfill() }
+        
+        let thirdExpectation = expectation(description: "Third")
+        sut.insert(anyData(), for: url) { _ in thirdExpectation.fulfill() }
+            
+        wait(
+            for: [firstExpectation, secondExpectation, thirdExpectation],
+            timeout: 5,
+            enforceOrder: true
+        )
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #filePath, line: UInt = #line) throws -> CoreDataFeedStore {
@@ -81,11 +101,11 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
             switch (receivedResult, expectedResult) {
             case let (.success(receivedData), .success(expectedData)):
                 XCTAssertEqual(receivedData, expectedData, "Data should match", file: file, line: line)
+                exp.fulfill()
             default:
                 XCTFail("Expected \(expectedResult), got \(receivedResult)", file: file, line: line)
+                exp.fulfill()
             }
-            
-            exp.fulfill()
         }
         
         wait(for: [exp], timeout: 1.0)
