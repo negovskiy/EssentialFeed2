@@ -9,14 +9,14 @@ import XCTest
 import EssentialFeed2
 
 class CoreDataFeedImageDataStoreTests: XCTestCase {
-    func test_retrieveImageData_deliversNotFoundWhenEmpty() {
-        let sut = try! makeSUT()
+    func test_retrieveImageData_deliversNotFoundWhenEmpty() throws {
+        let sut = try makeSUT()
         
         expect(sut, toCompleteRetrievedWith: notFound(), for: anyURL())
     }
     
-    func test_retrieveImageData_deliversNotFoundWhenStoreDataURLDoesNotMatch() {
-        let sut = try! makeSUT()
+    func test_retrieveImageData_deliversNotFoundWhenStoreDataURLDoesNotMatch() throws {
+        let sut = try makeSUT()
         let url = anyURL()
         let nonMatchingURL = URL(string: "https://another-url.com")!
         
@@ -25,8 +25,8 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
         expect(sut, toCompleteRetrievedWith: notFound(), for: nonMatchingURL)
     }
     
-    func test_retrieveImageData_deliversFoundDataWhenStoreHasDataForMatchingURL() {
-        let sut = try! makeSUT()
+    func test_retrieveImageData_deliversFoundDataWhenStoreHasDataForMatchingURL() throws {
+        let sut = try makeSUT()
         let matchingURL = anyURL()
         let storedData = anyData()
         
@@ -35,8 +35,8 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
         expect(sut, toCompleteRetrievedWith: found(storedData), for: matchingURL)
     }
     
-    func test_retrieveImageData_deliversLastInsertedValue() {
-        let sut = try! makeSUT()
+    func test_retrieveImageData_deliversLastInsertedValue() throws {
+        let sut = try makeSUT()
         let matchingURL = anyURL()
         let firstData = Data("first chunk".utf8)
         let secondData = Data("first chunk".utf8)
@@ -47,8 +47,8 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
         expect(sut, toCompleteRetrievedWith: found(secondData), for: matchingURL)
     }
     
-    func test_sideEffects_runSerially() {
-        let sut = try! makeSUT()
+    func test_sideEffects_runSerially() throws {
+        let sut = try makeSUT()
         let url = anyURL()
         
         let firstExpectation = expectation(description: "First")
@@ -138,3 +138,4 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 }
+

@@ -56,10 +56,10 @@ final class EssentialFeed2CacheIntegrationTests: XCTestCase {
     
     // MARK: - LocalFeedImageDataLoader Tests
     
-    func test_loadImageData_deliversSavedDataOnASeparateInstance() {
-        let imageLoaderToPerformSave = try! makeImageLoader()
-        let imageLoaderToPerformLoad = try! makeImageLoader()
-        let feedLoader = try! makeFeedLoader()
+    func test_loadImageData_deliversSavedDataOnASeparateInstance() throws {
+        let imageLoaderToPerformSave = try makeImageLoader()
+        let imageLoaderToPerformLoad = try makeImageLoader()
+        let feedLoader = try makeFeedLoader()
         let image = uniqueImage()
         let dataToSave = anyData()
         
@@ -274,3 +274,4 @@ final class EssentialFeed2CacheIntegrationTests: XCTestCase {
         try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
 }
+
