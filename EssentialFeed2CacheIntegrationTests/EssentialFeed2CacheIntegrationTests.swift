@@ -54,7 +54,7 @@ final class EssentialFeed2CacheIntegrationTests: XCTestCase {
         expect(feedLoaderToPerformLoad, toLoad: latestFeed)
     }
     
-    func test_validateCache_doesNotDeleteRecentlySavedItems() throws {
+    func test_validateFeedCache_doesNotDeleteRecentlySavedItems() throws {
         let feedLoaderToPerformSave = try makeFeedLoader()
         let feedLoaderToPerformValidation = try makeFeedLoader()
         let feed = uniqueImageFeed().models
@@ -63,6 +63,19 @@ final class EssentialFeed2CacheIntegrationTests: XCTestCase {
         validateCache(with: feedLoaderToPerformValidation)
         
         expect(feedLoaderToPerformValidation, toLoad: feed)
+    }
+    
+    func test_validateFeedCache_deletesFeedSavedInADistantPast() throws {
+        let feedLoaderToPerformSave = try makeFeedLoader(currentDate: .distantPast)
+        let feedLoaderToPerformValidation = try makeFeedLoader(currentDate: Date())
+        let feed = uniqueImageFeed().models
+        
+        save(feed, with: feedLoaderToPerformSave)
+        validateCache(with: feedLoaderToPerformValidation)
+        
+        //TODO: Replace feedLoader to `save` one
+        // after fixing CoreData multiple stores issue
+        expect(feedLoaderToPerformValidation, toLoad: [])
     }
     
     // MARK: - LocalFeedImageDataLoader Tests
@@ -100,13 +113,14 @@ final class EssentialFeed2CacheIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeFeedLoader(
+        currentDate: Date = .now,
         file: StaticString = #filePath,
         line: UInt = #line
     ) throws -> LocalFeedLoader {
         
         let storeURL = testSpecificStoreURL()
-        let store = try CoreDataFeedStore(storeURL: storeURL)
-        let sut = LocalFeedLoader(currentDate: Date.init, store: store)
+        let store = try CoreDataFeedStore(storeURL: storeURL, contextQueue: .main)
+        let sut = LocalFeedLoader(currentDate: { currentDate }, store: store)
         
         trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -120,7 +134,7 @@ final class EssentialFeed2CacheIntegrationTests: XCTestCase {
     ) throws -> LocalFeedImageDataLoader {
         
         let storeURL = testSpecificStoreURL()
-        let store = try CoreDataFeedStore(storeURL: storeURL)
+        let store = try CoreDataFeedStore(storeURL: storeURL, contextQueue: .main)
         let sut = LocalFeedImageDataLoader(store: store)
         
         trackForMemoryLeaks(store, file: file, line: line)
@@ -283,11 +297,7 @@ final class EssentialFeed2CacheIntegrationTests: XCTestCase {
     }
     
     private func testSpecificStoreURL() -> URL {
-        cachesDirectoryURL().appendingPathComponent("\(type(of: Self.self)).store")
-    }
-    
-    private func cachesDirectoryURL() -> URL {
-        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        .cachesDirectory.appendingPathComponent("\(type(of: self)).store")
     }
     
     private func undoStoreSideEffects() {
