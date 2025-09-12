@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		551F72E02E745B2B00225DD3 /* EssentialFeed2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 551F72DE2E745B2B00225DD3 /* EssentialFeed2.framework */; };
+		551F72E12E745B2B00225DD3 /* EssentialFeed2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 551F72DE2E745B2B00225DD3 /* EssentialFeed2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		551F72E22E745B2B00225DD3 /* EssentialFeed2iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 551F72DF2E745B2B00225DD3 /* EssentialFeed2iOS.framework */; };
+		551F72E32E745B2B00225DD3 /* EssentialFeed2iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 551F72DF2E745B2B00225DD3 /* EssentialFeed2iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		551F6C332E7457B900225DD3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -23,10 +30,27 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		551F72E42E745B2B00225DD3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				551F72E32E745B2B00225DD3 /* EssentialFeed2iOS.framework in Embed Frameworks */,
+				551F72E12E745B2B00225DD3 /* EssentialFeed2.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		551F6C252E7457B700225DD3 /* EssentialApp2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialApp2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		551F6C322E7457B900225DD3 /* EssentialApp2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialApp2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		551F6C3C2E7457B900225DD3 /* EssentialApp2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialApp2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		551F72DE2E745B2B00225DD3 /* EssentialFeed2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		551F72DF2E745B2B00225DD3 /* EssentialFeed2iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed2iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +76,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				551F72E22E745B2B00225DD3 /* EssentialFeed2iOS.framework in Frameworks */,
+				551F72E02E745B2B00225DD3 /* EssentialFeed2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +104,7 @@
 				551F6C272E7457B700225DD3 /* EssentialApp2 */,
 				551F6C352E7457B900225DD3 /* EssentialApp2Tests */,
 				551F6C3F2E7457B900225DD3 /* EssentialApp2UITests */,
+				551F72DD2E745B2B00225DD3 /* Frameworks */,
 				551F6C262E7457B700225DD3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,6 +119,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		551F72DD2E745B2B00225DD3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				551F72DE2E745B2B00225DD3 /* EssentialFeed2.framework */,
+				551F72DF2E745B2B00225DD3 /* EssentialFeed2iOS.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,6 +138,7 @@
 				551F6C212E7457B700225DD3 /* Sources */,
 				551F6C222E7457B700225DD3 /* Frameworks */,
 				551F6C232E7457B700225DD3 /* Resources */,
+				551F72E42E745B2B00225DD3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
