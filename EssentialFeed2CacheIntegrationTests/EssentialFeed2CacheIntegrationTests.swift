@@ -73,8 +73,9 @@ final class EssentialFeed2CacheIntegrationTests: XCTestCase {
         save(feed, with: feedLoaderToPerformSave)
         validateCache(with: feedLoaderToPerformValidation)
         
-        //TODO: Replace feedLoader to `save` one
+        //TODO: Replace feedLoader to `feedLoaderToPerformSave` one
         // after fixing CoreData multiple stores issue
+        // expect(feedLoaderToPerformSave, toLoad: [])
         expect(feedLoaderToPerformValidation, toLoad: [])
     }
     
