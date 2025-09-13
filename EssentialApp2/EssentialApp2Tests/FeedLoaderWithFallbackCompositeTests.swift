@@ -10,13 +10,23 @@ import EssentialFeed2
 
 class FeedLoaderWithFallbackComposite: FeedLoader {
     let primary: FeedLoader
+    let fallback: FeedLoader
     
     init(primary: FeedLoader, fallback: FeedLoader) {
         self.primary = primary
+        self.fallback = fallback
     }
     
     func load(completion: @escaping (FeedLoader.Result) -> Void) {
-        primary.load(completion: completion)
+        primary.load { [weak self] primaryResult in
+            switch primaryResult {
+            case .success:
+                completion(primaryResult)
+                
+            case .failure:
+                self?.fallback.load(completion: completion)
+            }
+        }
     }
 }
 
@@ -32,6 +42,27 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
             switch result {
             case let .success(receivedFeed):
                 XCTAssertEqual(receivedFeed, remoteFeed)
+                
+            case .failure:
+                XCTFail("Expected to succeed but got failure instead.")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_load_deliversFallbackFeedOnPrimaryLoaderFailure() {
+        let localFeed = uniqueFeed()
+        let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(localFeed))
+        
+        let exp = expectation(description: "Wait for loading to complete.")
+        
+        sut.load { result in
+            switch result {
+            case let .success(receivedFeed):
+                XCTAssertEqual(receivedFeed, localFeed)
                 
             case .failure:
                 XCTFail("Expected to succeed but got failure instead.")
@@ -75,6 +106,10 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
                 line: line
             )
         }
+    }
+    
+    func anyNSError() -> NSError {
+        NSError(domain: "any error", code: 0, userInfo: nil)
     }
     
     private func uniqueFeed() -> [FeedImage] {
