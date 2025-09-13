@@ -36,42 +36,14 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         let localFeed = uniqueFeed()
         let sut = makeSUT(primaryResult: .success(remoteFeed), fallbackResult: .success(localFeed))
         
-        let exp = expectation(description: "Wait for loading to complete.")
-        
-        sut.load { result in
-            switch result {
-            case let .success(receivedFeed):
-                XCTAssertEqual(receivedFeed, remoteFeed)
-                
-            case .failure:
-                XCTFail("Expected to succeed but got failure instead.")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut, toCompleteWith: .success(remoteFeed))
     }
     
     func test_load_deliversFallbackFeedOnPrimaryLoaderFailure() {
         let localFeed = uniqueFeed()
         let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(localFeed))
         
-        let exp = expectation(description: "Wait for loading to complete.")
-        
-        sut.load { result in
-            switch result {
-            case let .success(receivedFeed):
-                XCTAssertEqual(receivedFeed, localFeed)
-                
-            case .failure:
-                XCTFail("Expected to succeed but got failure instead.")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut, toCompleteWith: .success(localFeed))
     }
     
     // MARK: - Helpers
@@ -93,7 +65,31 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         return sut
     }
     
-    func trackForMemoryLeaks<T: AnyObject>(
+    private func expect(
+        _ sut: FeedLoader,
+        toCompleteWith expectedResult: FeedLoader.Result,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Wait for loading to complete.")
+        
+        sut.load { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedFeed), .success(expectedFeed)):
+                XCTAssertEqual(receivedFeed, expectedFeed, file: file, line: line)
+            case (.failure, .failure):
+                break
+                
+            default: XCTFail("Unexpected result", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    private func trackForMemoryLeaks<T: AnyObject>(
         _ object: T,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -108,7 +104,7 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         }
     }
     
-    func anyNSError() -> NSError {
+    private func anyNSError() -> NSError {
         NSError(domain: "any error", code: 0, userInfo: nil)
     }
     
