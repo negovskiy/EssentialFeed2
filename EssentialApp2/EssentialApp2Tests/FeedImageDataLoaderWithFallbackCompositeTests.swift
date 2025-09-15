@@ -33,8 +33,8 @@ final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
                     switch fallbackResult {
                     case let .success(fallbackData):
                         completion(.success(fallbackData))
-                    case .failure:
-                        break
+                    case let .failure(error):
+                        completion(.failure(error))
                     }
                 }
             }
@@ -75,6 +75,25 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
                 XCTAssertEqual(receivedData, fallbackData)
             case .failure:
                 XCTFail("Expected to succeed, but it failed")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_loadImageData_deliversFailureOnBothPrimaryAndFallbackFailure() {
+        let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .failure(anyNSError()))
+        let url = anyURL()
+        
+        let exp = XCTestExpectation(description: "Wait for loading to complete")
+        _ = sut.loadImageData(from: url) { result in
+            switch result {
+            case .success:
+                XCTFail("Expected to fail, but it failed")
+            case .failure:
+                break
             }
             
             exp.fulfill()
