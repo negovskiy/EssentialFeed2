@@ -9,13 +9,14 @@ import Foundation
 import EssentialFeed2
 
 public final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
-    class Task: FeedImageDataLoaderTask {
+    class TaskWrapper: FeedImageDataLoaderTask {
         var wrapped: FeedImageDataLoaderTask?
         
         func cancel() {
             wrapped?.cancel()
         }
     }
+    
     let primary: FeedImageDataLoader
     let fallback: FeedImageDataLoader
     
@@ -30,21 +31,14 @@ public final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader
             FeedImageDataLoader.Result
         ) -> Void
     ) -> any EssentialFeed2.FeedImageDataLoaderTask {
-        let task = Task()
+        let task = TaskWrapper()
         task.wrapped = primary.loadImageData(from: url) { [weak self] primaryResult in
             switch primaryResult {
-            case let .success(primaryData):
-                completion(.success(primaryData))
+            case .success:
+                completion(primaryResult)
                 
             case .failure:
-                task.wrapped = self?.fallback.loadImageData(from: url) { fallbackResult in
-                    switch fallbackResult {
-                    case let .success(fallbackData):
-                        completion(.success(fallbackData))
-                    case let .failure(error):
-                        completion(.failure(error))
-                    }
-                }
+                task.wrapped = self?.fallback.loadImageData(from: url, completion: completion)
             }
         }
         
