@@ -10,9 +10,11 @@ import EssentialFeed2
 
 final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     let primary: FeedImageDataLoader
+    let fallback: FeedImageDataLoader
     
     init(primary: FeedImageDataLoader, fallback: FeedImageDataLoader) {
         self.primary = primary
+        self.fallback = fallback
     }
     
     func loadImageData(
@@ -21,7 +23,22 @@ final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
             FeedImageDataLoader.Result
         ) -> Void
     ) -> any EssentialFeed2.FeedImageDataLoaderTask {
-        primary.loadImageData(from: url, completion: completion)
+        primary.loadImageData(from: url) { [weak self] primaryResult in
+            switch primaryResult {
+            case let .success(primaryData):
+                completion(.success(primaryData))
+                
+            case .failure:
+                _ = self?.fallback.loadImageData(from: url) { fallbackResult in
+                    switch fallbackResult {
+                    case let .success(fallbackData):
+                        completion(.success(fallbackData))
+                    case .failure:
+                        break
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -36,6 +53,26 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             switch result {
             case let .success(receivedData):
                 XCTAssertEqual(receivedData, primaryData)
+            case .failure:
+                XCTFail("Expected to succeed, but it failed")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_loadImageData_deliversFallbackResultOnPrimaryFailure() {
+        let fallbackData = Data("fallback data".utf8)
+        let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
+        let url = anyURL()
+        
+        let exp = XCTestExpectation(description: "Wait for loading to complete")
+        _ = sut.loadImageData(from: url) { result in
+            switch result {
+            case let .success(receivedData):
+                XCTAssertEqual(receivedData, fallbackData)
             case .failure:
                 XCTFail("Expected to succeed, but it failed")
             }
