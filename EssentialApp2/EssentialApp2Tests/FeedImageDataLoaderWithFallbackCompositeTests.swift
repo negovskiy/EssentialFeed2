@@ -46,60 +46,21 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
     func test_loadImageData_deliversPrimaryResultOnPrimarySuccess() {
         let primaryData = Data("primary data".utf8)
         let sut = makeSUT(primaryResult: .success(primaryData), fallbackResult: .failure(anyNSError()))
-        let url = anyURL()
         
-        let exp = XCTestExpectation(description: "Wait for loading to complete")
-        _ = sut.loadImageData(from: url) { result in
-            switch result {
-            case let .success(receivedData):
-                XCTAssertEqual(receivedData, primaryData)
-            case .failure:
-                XCTFail("Expected to succeed, but it failed")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut, toCompleteWith: .success(primaryData))
     }
     
     func test_loadImageData_deliversFallbackResultOnPrimaryFailure() {
         let fallbackData = Data("fallback data".utf8)
         let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
-        let url = anyURL()
         
-        let exp = XCTestExpectation(description: "Wait for loading to complete")
-        _ = sut.loadImageData(from: url) { result in
-            switch result {
-            case let .success(receivedData):
-                XCTAssertEqual(receivedData, fallbackData)
-            case .failure:
-                XCTFail("Expected to succeed, but it failed")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut, toCompleteWith: .success(fallbackData))
     }
     
     func test_loadImageData_deliversFailureOnBothPrimaryAndFallbackFailure() {
         let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .failure(anyNSError()))
-        let url = anyURL()
         
-        let exp = XCTestExpectation(description: "Wait for loading to complete")
-        _ = sut.loadImageData(from: url) { result in
-            switch result {
-            case .success:
-                XCTFail("Expected to fail, but it failed")
-            case .failure:
-                break
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut, toCompleteWith: .failure(anyNSError()))
     }
     
     // MARK: - Helpers
@@ -121,6 +82,41 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func expect(
+        _ sut: FeedImageDataLoaderWithFallbackComposite,
+        toCompleteWith expectedResult: FeedImageDataLoader.Result,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = XCTestExpectation(description: "Wait for loading to complete")
+        
+        _ = sut.loadImageData(from: anyURL()) { receivedResult in
+            switch (expectedResult, receivedResult) {
+            case let (.success(expectedData), .success(receivedData)):
+                XCTAssertEqual(
+                    expectedData,
+                    receivedData,
+                    "Expected and received data do not match",
+                    file: file,
+                    line: line
+                )
+            
+            case (.failure, .failure):
+                break
+            default:
+                XCTFail(
+                    "Expected \(expectedResult), but got \(receivedResult)",
+                    file: file,
+                    line: line
+                )
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
     }
     
     private class FeedImageDataLoaderStub: FeedImageDataLoader {
