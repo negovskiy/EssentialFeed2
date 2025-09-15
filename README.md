@@ -1,6 +1,8 @@
 # Essential Feed App – Image Feed Feature
 
-[![CI flow](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI.yml/badge.svg)](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI.yml)
+[![CI iOS flow](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI_iOS.yml/badge.svg)](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI_iOS.yml)
+[![CI macOS flow](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI_macOS.yml/badge.svg)](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI_macOS.yml)
+
 
 ## BDD Specs
 
