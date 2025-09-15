@@ -46,26 +46,6 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
     
-    private class FeedImageDataLoaderStub: FeedImageDataLoader {
-        private class TaskWrapper: FeedImageDataLoaderTask {
-            func cancel() {}
-        }
-        
-        let result: FeedImageDataLoader.Result
-        
-        init(result: FeedImageDataLoader.Result) {
-            self.result = result
-        }
-        
-        func loadImageData(
-            from url: URL,
-            completion: @escaping (FeedImageDataLoader.Result) -> Void
-        ) -> any EssentialFeed2.FeedImageDataLoaderTask {
-            completion(result)
-            return TaskWrapper()
-        }
-    }
-    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -87,26 +67,23 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         return sut
     }
     
-    private func anyNSError() -> NSError {
-        NSError(domain: "any error", code: 0, userInfo: nil)
-    }
-    
-    private func anyURL() -> URL {
-        URL(string: "https://any-url.com")!
-    }
-    
-    private func trackForMemoryLeaks<T: AnyObject>(
-        _ object: T,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        addTeardownBlock { [weak object] in
-            XCTAssertNil(
-                object,
-                "Instance should have been deallocated. Potential memory leak.",
-                file: file,
-                line: line
-            )
+    private class FeedImageDataLoaderStub: FeedImageDataLoader {
+        private class TaskWrapper: FeedImageDataLoaderTask {
+            func cancel() {}
+        }
+        
+        let result: FeedImageDataLoader.Result
+        
+        init(result: FeedImageDataLoader.Result) {
+            self.result = result
+        }
+        
+        func loadImageData(
+            from url: URL,
+            completion: @escaping (FeedImageDataLoader.Result) -> Void
+        ) -> any EssentialFeed2.FeedImageDataLoaderTask {
+            completion(result)
+            return TaskWrapper()
         }
     }
 }
