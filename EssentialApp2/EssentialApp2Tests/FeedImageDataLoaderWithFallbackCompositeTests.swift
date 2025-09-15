@@ -9,6 +9,17 @@ import XCTest
 import EssentialFeed2
 
 final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
+    class Task: FeedImageDataLoaderTask {
+        let wrapped: FeedImageDataLoaderTask?
+        
+        init(wrapped: FeedImageDataLoaderTask?) {
+            self.wrapped = wrapped
+        }
+        
+        func cancel() {
+            wrapped?.cancel()
+        }
+    }
     let primary: FeedImageDataLoader
     let fallback: FeedImageDataLoader
     
@@ -23,7 +34,7 @@ final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
             FeedImageDataLoader.Result
         ) -> Void
     ) -> any EssentialFeed2.FeedImageDataLoaderTask {
-        primary.loadImageData(from: url) { [weak self] primaryResult in
+        Task(wrapped: primary.loadImageData(from: url) { [weak self] primaryResult in
             switch primaryResult {
             case let .success(primaryData):
                 completion(.success(primaryData))
@@ -38,7 +49,7 @@ final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
                     }
                 }
             }
-        }
+        })
     }
 }
 
@@ -61,6 +72,21 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .failure(anyNSError()))
         
         expect(sut, toCompleteWith: .failure(anyNSError()))
+    }
+    
+    func test_loadImageData_cancelsPrimaryLoaderTaskOnCancelBeforePrimaryCompleted() {
+        let primaryData = Data("primary data".utf8)
+        let primaryLoader = FeedImageDataLoaderStub(result: .success(primaryData))
+        let fallbackLoader = FeedImageDataLoaderStub(result: .failure(anyNSError()))
+        let sut = FeedImageDataLoaderWithFallbackComposite(
+            primary: primaryLoader,
+            fallback: fallbackLoader
+        )
+        
+        let task = sut.loadImageData(from: anyURL()) { _ in }
+        task.cancel()
+        XCTAssertTrue(primaryLoader.isTaskCancelled())
+        XCTAssertFalse(fallbackLoader.isTaskCancelled())
     }
     
     // MARK: - Helpers
@@ -121,10 +147,15 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
     
     private class FeedImageDataLoaderStub: FeedImageDataLoader {
         private class TaskWrapper: FeedImageDataLoaderTask {
-            func cancel() {}
+            var isCanceled = false
+            
+            func cancel() {
+                isCanceled = true
+            }
         }
         
         let result: FeedImageDataLoader.Result
+        private var task: TaskWrapper?
         
         init(result: FeedImageDataLoader.Result) {
             self.result = result
@@ -135,7 +166,13 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             completion: @escaping (FeedImageDataLoader.Result) -> Void
         ) -> any EssentialFeed2.FeedImageDataLoaderTask {
             completion(result)
-            return TaskWrapper()
+            let task = TaskWrapper()
+            self.task = task
+            return task
+        }
+        
+        func isTaskCancelled() -> Bool {
+            task?.isCanceled == true
         }
     }
 }
