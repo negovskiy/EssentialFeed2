@@ -42,16 +42,10 @@ final class FeedImageCellController: FeedImageView {
         cell?.locationContainer.isHidden = !viewModel.hasLocation
         cell?.locationLabel.text = viewModel.location
         cell?.descriptionLabel.text = viewModel.description
+        cell?.feedImageContainer.isShimmering = viewModel.isLoading
         cell?.feedImageView.setImageAnimated(viewModel.image)
-        cell?.feedImageContainer.isHidden = viewModel.isLoading
         cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
         cell?.onRetry = delegate.didRequestImage
-        
-        if viewModel.isLoading {
-            cell?.feedImageContainer.startShimmering()
-        } else {
-            cell?.feedImageContainer.stopShimmering()
-        }
     }
     
     private func releaseCellForReuse() {
