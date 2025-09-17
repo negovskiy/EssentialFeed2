@@ -8,16 +8,25 @@
 import UIKit
 
 extension UIView {
-    
     public var isShimmering: Bool {
-        layer.mask?.animation(forKey: "shimmer") != nil
+        set {
+            if newValue {
+                startShimmering()
+            } else {
+                stopShimmering()
+            }
+        }
+        
+        get {
+            layer.mask is ShimmeringLayer
+        }
     }
-
-    func startShimmering() {
+    
+    private func startShimmering() {
         layer.mask = ShimmeringLayer(size: bounds.size)
     }
-
-    func stopShimmering() {
+    
+    private func stopShimmering() {
         layer.mask = nil
     }
     
@@ -34,7 +43,12 @@ extension UIView {
             startPoint = CGPoint(x: 0.0, y: 0.4)
             endPoint = CGPoint(x: 1.0, y: 0.6)
             locations = [0.4, 0.5, 0.6]
-            frame = CGRect(x: -size.width, y: 0, width: size.width*3, height: size.height)
+            frame = CGRect(
+                x: -size.width,
+                y: 0,
+                width: size.width*3,
+                height: size.height*3
+            )
             
             let animation = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.locations))
             animation.fromValue = [0.0, 0.1, 0.2]
