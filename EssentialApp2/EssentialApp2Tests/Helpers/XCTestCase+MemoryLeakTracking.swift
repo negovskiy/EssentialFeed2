@@ -1,5 +1,5 @@
 //
-//  XCTestCase+memoryLeakTracking.swift
+//  XCTestCase+MemoryLeakTracking.swift
 //  EssentialApp2
 //
 //  Created by Andrey Negovskiy on 9/18/25.
