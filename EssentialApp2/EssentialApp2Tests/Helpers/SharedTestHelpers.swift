@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import EssentialFeed2
 
 extension XCTestCase {
     func anyNSError() -> NSError {
@@ -14,5 +15,16 @@ extension XCTestCase {
     
     func anyURL() -> URL {
         URL(string: "https://any-url.com")!
+    }
+    
+    func uniqueFeed() -> [FeedImage] {
+        [
+            FeedImage(
+                id: UUID(),
+                description: "description",
+                location: "location",
+                url: URL(string: "http://a-url.com")!
+            )
+        ]
     }
 }
