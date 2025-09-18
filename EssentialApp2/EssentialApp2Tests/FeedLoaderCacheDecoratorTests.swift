@@ -20,7 +20,7 @@ class FeedLoaderCacheDecorator: FeedLoader {
     }
 }
 
-class FeedLoaderCacheDecoratorTests: XCTestCase {
+class FeedLoaderCacheDecoratorTests: XCTestCase, FeedLoaderTestCase {
     func test_load_deliversFeedOnLoaderSuccess() {
         let feed = uniqueFeed()
         let loader = FeedLoaderStub(result: .success(feed))
@@ -34,31 +34,5 @@ class FeedLoaderCacheDecoratorTests: XCTestCase {
         let sut = FeedLoaderCacheDecorator(decoratee: loader)
         
         expect(sut, toCompleteWith: .failure(anyNSError()))
-    }
-    
-    // MARK: - Helpers
-    
-    private func expect(
-        _ sut: FeedLoader,
-        toCompleteWith expectedResult: FeedLoader.Result,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "Wait for loading to complete.")
-        
-        sut.load { receivedResult in
-            switch (receivedResult, expectedResult) {
-            case let (.success(receivedFeed), .success(expectedFeed)):
-                XCTAssertEqual(receivedFeed, expectedFeed, file: file, line: line)
-            case (.failure, .failure):
-                break
-                
-            default: XCTFail("Unexpected result", file: file, line: line)
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1)
     }
 }
