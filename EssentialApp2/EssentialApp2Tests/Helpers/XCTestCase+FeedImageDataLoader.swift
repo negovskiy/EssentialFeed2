@@ -13,9 +13,9 @@ protocol FeedImageDataLoaderTestCase: XCTestCase {}
 
 extension FeedImageDataLoaderTestCase {
     func expect(
-        _ sut: FeedImageDataLoaderWithFallbackComposite,
+        _ sut: FeedImageDataLoader,
         toCompleteWith expectedResult: FeedImageDataLoader.Result,
-        when action: () -> Void,
+        when action: () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) {
