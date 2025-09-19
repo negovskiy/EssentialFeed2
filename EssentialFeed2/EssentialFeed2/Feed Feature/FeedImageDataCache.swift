@@ -7,10 +7,8 @@
 
 import Foundation
 
-public protocol FeedImageDataCache<SaveError> {
-    associatedtype SaveError: Error
-    
-    typealias SaveResult = Swift.Result<Void, SaveError>
+public protocol FeedImageDataCache {
+    typealias SaveResult = Swift.Result<Void, Error>
     
     func saveImageData(_ data: Data, for url: URL, completion: @escaping (SaveResult) -> Void)
 }

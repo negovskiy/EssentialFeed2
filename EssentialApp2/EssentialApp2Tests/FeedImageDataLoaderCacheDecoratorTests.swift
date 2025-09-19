@@ -69,10 +69,6 @@ class FeedImageDataLoaderCacheDecoratorTests: XCTestCase, FeedImageDataLoaderTes
     }
     
     private class CacheSpy: FeedImageDataCache {
-        enum SaveError: Swift.Error {
-            case failed
-        }
-        
         enum Message: Equatable {
             case save(Data, URL)
         }

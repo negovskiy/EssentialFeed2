@@ -8,11 +8,11 @@
 import Foundation
 import EssentialFeed2
 
-public class FeedImageDataLoaderCacheDecorator<Cache: FeedImageDataCache>: FeedImageDataLoader {
+public class FeedImageDataLoaderCacheDecorator: FeedImageDataLoader {
     private let decoratee: FeedImageDataLoader
-    private let cache: Cache
+    private let cache: FeedImageDataCache
     
-    public init(decoratee: FeedImageDataLoader, cache: Cache) {
+    public init(decoratee: FeedImageDataLoader, cache: FeedImageDataCache) {
         self.decoratee = decoratee
         self.cache = cache
     }
