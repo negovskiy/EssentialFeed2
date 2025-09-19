@@ -9,7 +9,7 @@ import XCTest
 import EssentialApp2
 import EssentialFeed2
 
-final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
+final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase, FeedImageDataLoaderTestCase {
     func test_loadImageData_deliversPrimaryResultOnPrimarySuccess() {
         let primaryData = Data("primary data".utf8)
         let (sut, primaryLoader, fallbackLoader) = makeSUT(
@@ -92,79 +92,5 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, primaryLoader, fallbackLoader)
-    }
-    
-    private func expect(
-        _ sut: FeedImageDataLoaderWithFallbackComposite,
-        toCompleteWith expectedResult: FeedImageDataLoader.Result,
-        when action: () -> Void,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = XCTestExpectation(description: "Wait for loading to complete")
-        
-        _ = sut.loadImageData(from: anyURL()) { receivedResult in
-            switch (expectedResult, receivedResult) {
-            case let (.success(expectedData), .success(receivedData)):
-                XCTAssertEqual(
-                    expectedData,
-                    receivedData,
-                    "Expected and received data do not match",
-                    file: file,
-                    line: line
-                )
-            
-            case (.failure, .failure):
-                break
-            default:
-                XCTFail(
-                    "Expected \(expectedResult), but got \(receivedResult)",
-                    file: file,
-                    line: line
-                )
-            }
-            
-            exp.fulfill()
-        }
-        
-        action()
-        wait(for: [exp], timeout: 1)
-    }
-    
-    private class FeedImageDataLoaderStub: FeedImageDataLoader {
-        private class TaskWrapperSpy: FeedImageDataLoaderTask {
-            var isCanceled = false
-            var isSecond = false
-            
-            func cancel() {
-                isCanceled = true
-            }
-        }
-        
-        let result: FeedImageDataLoader.Result
-        private var task: TaskWrapperSpy?
-        private var completion: ((FeedImageDataLoader.Result) -> Void)?
-        
-        init(result: FeedImageDataLoader.Result) {
-            self.result = result
-        }
-        
-        func loadImageData(
-            from url: URL,
-            completion: @escaping (FeedImageDataLoader.Result) -> Void
-        ) -> any EssentialFeed2.FeedImageDataLoaderTask {
-            self.completion = completion
-            let task = TaskWrapperSpy()
-            self.task = task
-            return task
-        }
-        
-        func completeLoading() {
-            completion?(result)
-        }
-        
-        func isTaskCancelled() -> Bool {
-            task?.isCanceled == true
-        }
     }
 }

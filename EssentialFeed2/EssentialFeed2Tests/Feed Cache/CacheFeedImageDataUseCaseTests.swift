@@ -91,7 +91,12 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
                 break
                 
             case let (.failure(receivedError), .failure(expectedError)):
-                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+                XCTAssertEqual(
+                    receivedError as NSError,
+                    expectedError as NSError,
+                    file: file,
+                    line: line
+                )
                 
             default:
                 XCTFail("Expected result \(expectedResult) but got \(receivedResult)", file: file, line: line)
