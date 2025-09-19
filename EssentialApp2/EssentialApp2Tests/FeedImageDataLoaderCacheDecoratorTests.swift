@@ -47,6 +47,16 @@ class FeedImageDataLoaderCacheDecoratorTests: XCTestCase, FeedImageDataLoaderTes
         XCTAssertTrue(cache.messages.isEmpty, "Expected no cache interactions, but got: \(cache.messages)")
     }
     
+    func test_loadImageData_cancelsLoaderTask() {
+        let (sut, loader, _) = makeSUT(expectedResult: .success(Data()))
+        
+        let task = sut.loadImageData(from: anyURL()) { _ in }
+        
+        XCTAssertFalse(loader.isTaskCancelled(), "Expected task to not be cancelled initially")
+        task.cancel()
+        XCTAssertTrue(loader.isTaskCancelled(), "Expected task to be cancelled after cancellation was triggered")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
