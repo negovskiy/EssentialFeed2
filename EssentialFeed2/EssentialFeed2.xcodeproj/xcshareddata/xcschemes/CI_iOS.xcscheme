@@ -47,6 +47,12 @@
             reference = "container:Test Plans/CI_iOS.xctestplan"
             default = "YES">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:../EssentialApp2/EssentialApp2.xctestplan">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:../EssentialApp2/EssentialApp2UIAcceptanceTests.xctestplan">
+         </TestPlanReference>
       </TestPlans>
    </TestAction>
    <LaunchAction
