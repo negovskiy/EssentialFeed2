@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:EssentialApp2.xctestplan"
+            reference = "container:Test Plans/EssentialApp2.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -43,17 +43,6 @@
                BlueprintIdentifier = "551F6C312E7457B900225DD3"
                BuildableName = "EssentialApp2Tests.xctest"
                BlueprintName = "EssentialApp2Tests"
-               ReferencedContainer = "container:EssentialApp2.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "YES"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "55A3FD5B2E8145B50038282E"
-               BuildableName = "EssentialApp2UIAcceptanceTests.xctest"
-               BlueprintName = "EssentialApp2UIAcceptanceTests"
                ReferencedContainer = "container:EssentialApp2.xcodeproj">
             </BuildableReference>
          </TestableReference>

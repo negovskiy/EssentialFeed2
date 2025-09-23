@@ -20,7 +20,7 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/EssentialApp2\/EssentialApp2.xcodeproj",
+        "containerPath" : "container:EssentialApp2.xcodeproj",
         "identifier" : "551F6C312E7457B900225DD3",
         "name" : "EssentialApp2Tests"
       }

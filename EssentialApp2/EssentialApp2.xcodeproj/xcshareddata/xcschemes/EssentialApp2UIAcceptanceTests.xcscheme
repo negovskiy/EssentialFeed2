@@ -6,6 +6,22 @@
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES"
       buildArchitectures = "Automatic">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "551F6C242E7457B700225DD3"
+               BuildableName = "EssentialApp2.app"
+               BlueprintName = "EssentialApp2"
+               ReferencedContainer = "container:EssentialApp2.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
@@ -14,23 +30,10 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:EssentialApp2UIAcceptanceTests.xctestplan"
+            reference = "container:Test Plans/EssentialApp2UIAcceptanceTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "55A3FD5B2E8145B50038282E"
-               BuildableName = "EssentialApp2UIAcceptanceTests.xctest"
-               BlueprintName = "EssentialApp2UIAcceptanceTests"
-               ReferencedContainer = "container:EssentialApp2.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -49,6 +52,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "551F6C242E7457B700225DD3"
+            BuildableName = "EssentialApp2.app"
+            BlueprintName = "EssentialApp2"
+            ReferencedContainer = "container:EssentialApp2.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
