@@ -31,9 +31,11 @@ private struct FeedViewControllerWrapper: UIViewControllerRepresentable {
             .defaultDirectoryURL()
             .appendingPathComponent("feed-store.sqlite")
         
+#if DEBUG
         if CommandLine.arguments.contains("-reset") {
             try? FileManager.default.removeItem(at: localStoreURL)
         }
+#endif
         
         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
         let localFeedLoader = LocalFeedLoader(currentDate: Date.init, store: localStore)
@@ -60,20 +62,21 @@ private struct FeedViewControllerWrapper: UIViewControllerRepresentable {
             imageLoader: imageLoader
         )
     }
-
+    
     func updateUIViewController(_ uiViewController: FeedViewController, context: Context) {
     }
     
     private func makeRemoteClient() -> HTTPClient {
-        switch UserDefaults.standard.string(forKey: "connectivity") {
-        case "offline":
-            AlwaysFailingHTTPClient()
-        default:
-            URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+#if DEBUG
+        if UserDefaults.standard.string(forKey: "connectivity") == "offline" {
+            return AlwaysFailingHTTPClient()
         }
+#endif
+        return URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
     }
 }
 
+#if DEBUG
 private class AlwaysFailingHTTPClient: HTTPClient {
     private class Task: HTTPClientTask {
         func cancel() {}
@@ -84,3 +87,4 @@ private class AlwaysFailingHTTPClient: HTTPClient {
         return Task()
     }
 }
+#endif
