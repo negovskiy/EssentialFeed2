@@ -20,6 +20,11 @@
           "containerPath" : "container:EssentialFeed2.xcodeproj",
           "identifier" : "550DB4E52E07FD22008DA93E",
           "name" : "EssentialFeed2iOS"
+        },
+        {
+          "containerPath" : "container:..\/EssentialApp2\/EssentialApp2.xcodeproj",
+          "identifier" : "551F6C242E7457B700225DD3",
+          "name" : "EssentialApp2"
         }
       ]
     },
