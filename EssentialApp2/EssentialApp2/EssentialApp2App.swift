@@ -31,6 +31,10 @@ private struct FeedViewControllerWrapper: UIViewControllerRepresentable {
             .defaultDirectoryURL()
             .appendingPathComponent("feed-store.sqlite")
         
+        if CommandLine.arguments.contains("-reset") {
+            try? FileManager.default.removeItem(at: localStoreURL)
+        }
+        
         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
         let localFeedLoader = LocalFeedLoader(currentDate: Date.init, store: localStore)
         let localImageLoader = LocalFeedImageDataLoader(store: localStore)
