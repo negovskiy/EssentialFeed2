@@ -10,11 +10,11 @@ import XCTest
 final class EssentialApp2UIAcceptanceTests: XCTestCase {
     func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
         let app = XCUIApplication()
-        app.launchArguments = ["-reset"]
+        app.launchArguments = ["-reset", "-connectivity", "online"]
         app.launch()
         
         let feedCells = app.cells.matching(identifier: "feed-image-cell")
-        XCTAssertEqual(feedCells.count, 22)
+        XCTAssertEqual(feedCells.count, 2)
         
         let feedImage = app.images.matching(identifier: "feed-image-view").firstMatch
         XCTAssertTrue(feedImage.exists)
@@ -22,7 +22,7 @@ final class EssentialApp2UIAcceptanceTests: XCTestCase {
     
     func test_onLaunch_displaysCachedFeedWhenCustomerHasNoConnectivity() {
         let onlineApp = XCUIApplication()
-        onlineApp.launchArguments = ["-reset"]
+        onlineApp.launchArguments = ["-reset", "-connectivity", "online"]
         onlineApp.launch()
         
         let offlineApp = XCUIApplication()
@@ -30,7 +30,7 @@ final class EssentialApp2UIAcceptanceTests: XCTestCase {
         offlineApp.launch()
         
         let cachedFeedCells = offlineApp.cells.matching(identifier: "feed-image-cell")
-        XCTAssertEqual(cachedFeedCells.count, 22)
+        XCTAssertEqual(cachedFeedCells.count, 2)
         
         let cachedFeedImage = offlineApp.images.matching(identifier: "feed-image-view").firstMatch
         XCTAssertTrue(cachedFeedImage.exists)
