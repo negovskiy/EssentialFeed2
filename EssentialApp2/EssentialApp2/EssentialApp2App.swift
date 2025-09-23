@@ -22,7 +22,12 @@ struct EssentialApp2App: App {
 
 private struct FeedViewControllerWrapper: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> FeedViewController {
-        let (feedLoader, imageLoader) = DataLoadersFactory.makeLoaders()
+#if DEBUG
+        let (feedLoader, imageLoader) = DebuggingDataLoaderFactory().makeLoaders()
+#else
+        let (feedLoader, imageLoader) = DataLoaderFactory().makeLoaders()
+#endif
+        
         return FeedUIComposer.feedComposedWith(
             feedLoader: feedLoader,
             imageLoader: imageLoader
