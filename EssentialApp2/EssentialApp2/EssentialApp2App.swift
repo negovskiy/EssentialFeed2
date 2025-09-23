@@ -22,6 +22,19 @@ struct EssentialApp2App: App {
 
 private struct FeedViewControllerWrapper: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> FeedViewController {
+        let (feedLoader, imageLoader) = DataLoadersFactory.makeLoaders()
+        return FeedUIComposer.feedComposedWith(
+            feedLoader: feedLoader,
+            imageLoader: imageLoader
+        )
+    }
+    
+    func updateUIViewController(_ uiViewController: FeedViewController, context: Context) {
+    }
+}
+
+private class DataLoadersFactory {
+    static func makeLoaders() -> (feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
         let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
         let remoteClient = makeRemoteClient()
         let remoteFeedLoader = RemoteFeedLoader(url: remoteURL, client: remoteClient)
@@ -57,16 +70,10 @@ private struct FeedViewControllerWrapper: UIViewControllerRepresentable {
             )
         )
         
-        return FeedUIComposer.feedComposedWith(
-            feedLoader: feedLoader,
-            imageLoader: imageLoader
-        )
+        return (feedLoader, imageLoader)
     }
     
-    func updateUIViewController(_ uiViewController: FeedViewController, context: Context) {
-    }
-    
-    private func makeRemoteClient() -> HTTPClient {
+    private static func makeRemoteClient() -> HTTPClient {
 #if DEBUG
         if UserDefaults.standard.string(forKey: "connectivity") == "offline" {
             return AlwaysFailingHTTPClient()
