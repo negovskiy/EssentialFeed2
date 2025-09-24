@@ -12,14 +12,18 @@ import EssentialFeed2iOS
 struct EssentialApp2App: App {
     var body: some Scene {
         WindowGroup {
-            FeedViewControllerWrapper()
+            rootView
                 .ignoresSafeArea()
         }
     }
+    
+    var rootView: some View {
+        RootViewControllerWrapper()
+    }
 }
 
-private struct FeedViewControllerWrapper: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> FeedViewController {
+private struct RootViewControllerWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
 #if DEBUG
         let (feedLoader, imageLoader) = DebuggingDataLoaderFactory().makeLoaders()
 #else
@@ -32,6 +36,6 @@ private struct FeedViewControllerWrapper: UIViewControllerRepresentable {
         )
     }
     
-    func updateUIViewController(_ uiViewController: FeedViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
 }
