@@ -12,30 +12,31 @@ import EssentialFeed2iOS
 struct EssentialApp2App: App {
     var body: some Scene {
         WindowGroup {
-            rootView
+            RootViewControllerWrapper()
                 .ignoresSafeArea()
         }
     }
-    
-    var rootView: some View {
-        RootViewControllerWrapper()
-    }
 }
 
-private struct RootViewControllerWrapper: UIViewControllerRepresentable {
+struct RootViewControllerWrapper: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
+        makeRootViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+    }
+    
+    func makeRootViewController() -> UIViewController {
 #if DEBUG
         let (feedLoader, imageLoader) = DebuggingDataLoaderFactory().makeLoaders()
 #else
         let (feedLoader, imageLoader) = DataLoaderFactory().makeLoaders()
 #endif
         
-        return FeedUIComposer.feedComposedWith(
+        let feedViewController = FeedUIComposer.feedComposedWith(
             feedLoader: feedLoader,
             imageLoader: imageLoader
         )
-    }
-    
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        return UINavigationController(rootViewController: feedViewController)
     }
 }
