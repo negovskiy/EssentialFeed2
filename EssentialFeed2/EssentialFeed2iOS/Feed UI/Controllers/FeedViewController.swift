@@ -8,7 +8,7 @@
 import UIKit
 import EssentialFeed2
 
-protocol FeedViewControllerDelegate {
+public protocol FeedViewControllerDelegate {
     func didRequestFeedRefresh()
 }
 
@@ -21,13 +21,13 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
     
     var delegate: FeedViewControllerDelegate?
     
-    var tableModel = [FeedImageCellController]() {
+    private var tableModel = [FeedImageCellController]() {
         didSet { tableView.reloadData() }
     }
     
     private var onViewDidAppear: ((FeedViewController) -> Void)?
     
-    convenience init?(coder: NSCoder, delegate: FeedViewControllerDelegate) {
+    public convenience init?(coder: NSCoder, delegate: FeedViewControllerDelegate) {
         self.init(coder: coder)
         self.delegate = delegate
     }
@@ -45,6 +45,10 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
         super.viewDidAppear(animated)
         
         onViewDidAppear?(self)
+    }
+    
+    public func display(_ cellControllers: [FeedImageCellController]) {
+        tableModel = cellControllers
     }
     
     public func display(_ viewModel: FeedLoadingViewModel) {

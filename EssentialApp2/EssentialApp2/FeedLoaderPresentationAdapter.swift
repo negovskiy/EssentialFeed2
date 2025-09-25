@@ -7,6 +7,7 @@
 
 import UIKit
 import EssentialFeed2
+import EssentialFeed2iOS
 
 final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     
