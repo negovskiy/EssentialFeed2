@@ -9,7 +9,6 @@ import XCTest
 import SwiftUI
 import EssentialFeed2iOS
 @testable import EssentialApp2
-import ViewInspector
 
 class EssentialApp2AppTests: XCTestCase {
     func test_appScene_usesRootViewControllerWrapper() {
