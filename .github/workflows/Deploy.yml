@@ -47,7 +47,7 @@ jobs:
         (cd EssentialApp2 && agvtool new-version -all $buildNumber)
 
     - name: Build
-      run: xcodebuild clean archive -sdk iphoneos -project EssentialApp2/EssentialApp2.xcodeproj -configuration "Release" -scheme "EssentialApp2" -derivedDataPath "DerivedData" -archivePath "DerivedData/Archive/EssentialApp2.xcarchive"
+      run: xcodebuild clean archive -sdk iphoneos -workspace Essential2.xcworkspace -configuration "Release" -scheme "EssentialApp2" -derivedDataPath "DerivedData" -archivePath "DerivedData/Archive/EssentialApp2.xcarchive"
     
     - name: Export
       run: xcodebuild -exportArchive -archivePath DerivedData/Archive/EssentialApp2.xcarchive -exportOptionsPlist .github/deployment/ExportOptions.plist -exportPath DerivedData/ipa
