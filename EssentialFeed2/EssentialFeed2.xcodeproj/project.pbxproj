@@ -195,15 +195,15 @@
 		559DC9DF2DB2661B002CB144 = {
 			isa = PBXGroup;
 			children = (
-				55F27DF72E116F3A004A2993 /* Test Plans */,
 				559DC9EB2DB2661B002CB144 /* EssentialFeed2 */,
-				559DC9F52DB2661B002CB144 /* EssentialFeed2Tests */,
 				5510A0282DC0C347005553F1 /* EssentialFeed2APIEndToEndTests */,
 				553766BE2DF3238F0034262D /* EssentialFeed2CacheIntegrationTests */,
 				550DB4E72E07FD22008DA93E /* EssentialFeed2iOS */,
 				550DB4F22E07FD22008DA93E /* EssentialFeed2iOSTests */,
+				559DC9F52DB2661B002CB144 /* EssentialFeed2Tests */,
 				558A75062E0D4CB70023F275 /* Frameworks */,
 				559DC9EA2DB2661B002CB144 /* Products */,
+				55F27DF72E116F3A004A2993 /* Test Plans */,
 			);
 			sourceTree = "<group>";
 		};
