@@ -45,17 +45,3 @@ public final class RemoteImageCommentsLoader {
         return .success(items)
     }
 }
-
-private extension Array where Element == RemoteFeedItem {
-    
-    func toModels() -> [FeedImage] {
-        map {
-            .init(
-                id: $0.id,
-                description: $0.description,
-                location: $0.location,
-                url: $0.image
-            )
-        }
-    }
-}
