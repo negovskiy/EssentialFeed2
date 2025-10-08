@@ -12,13 +12,9 @@ import EssentialFeed2iOS
 public enum FeedUIComposer {
     
     public static func feedComposedWith(
-        feedLoader: FeedLoader,
-        imageLoader: FeedImageDataLoader
+        feedLoader: @escaping () -> FeedLoader.Publisher,
+        imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher
     ) -> FeedViewController {
-        
-        let feedLoader = MainQueueDispatchDecorator(decoratee: feedLoader)
-        let imageLoader = MainQueueDispatchDecorator(decoratee: imageLoader)
-        
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
         let feedController = makeWith(
             delegate: presentationAdapter,

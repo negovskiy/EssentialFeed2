@@ -27,15 +27,16 @@ struct RootViewControllerWrapper: UIViewControllerRepresentable {
     }
     
     func makeRootViewController() -> UIViewController {
+        let factory: DataLoaderFactory
 #if DEBUG
-        let (feedLoader, imageLoader) = DebuggingDataLoaderFactory().makeLoaders()
+        factory = DebuggingDataLoaderFactory()
 #else
-        let (feedLoader, imageLoader) = DataLoaderFactory().makeLoaders()
+        factory = DataLoaderFactory()
 #endif
         
         let feedViewController = FeedUIComposer.feedComposedWith(
-            feedLoader: feedLoader,
-            imageLoader: imageLoader
+            feedLoader: factory.makeFeedLoader,
+            imageLoader: factory.makeImageDataLoader
         )
         return UINavigationController(rootViewController: feedViewController)
     }
