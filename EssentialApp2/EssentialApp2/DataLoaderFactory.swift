@@ -16,7 +16,11 @@ class DataLoaderFactory {
     func makeLoaders() -> (feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
         let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
         let remoteClient = makeRemoteClient()
-        let remoteFeedLoader = RemoteFeedLoader(url: remoteURL, client: remoteClient)
+        let remoteFeedLoader = RemoteLoader(
+            url: remoteURL,
+            client: remoteClient,
+            mapper: FeedItemsMapper.map
+        )
         let remoteImageLoader = RemoteFeedImageDataLoader(client: remoteClient)
         
         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
@@ -46,3 +50,5 @@ class DataLoaderFactory {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
     }
 }
+
+extension RemoteLoader: @retroactive FeedLoader where Resource == [FeedImage] {}
