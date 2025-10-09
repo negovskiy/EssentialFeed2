@@ -6,13 +6,15 @@
 //
 
 import CoreData
+import Combine
 import EssentialFeed2
 
 class DataLoaderFactory {
-    let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
     let localStoreURL = NSPersistentContainer
         .defaultDirectoryURL()
         .appendingPathComponent("feed-store.sqlite")
+    
+    private let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
     
     private lazy var store: FeedStore & FeedImageDataStore = {
         try! CoreDataFeedStore(storeURL: localStoreURL)
@@ -22,12 +24,14 @@ class DataLoaderFactory {
         makeRemoteClient()
     }()
     
-    func makeFeedLoader() -> FeedLoader.Publisher {
-        let localFeedLoader = LocalFeedLoader(currentDate: Date.init, store: store)
-        let remoteFeedLoader = RemoteLoader(url: remoteURL, client: client, mapper: FeedItemsMapper.map)
-        
-        return remoteFeedLoader
-            .loadPublisher()
+    private lazy var localFeedLoader: LocalFeedLoader = {
+        LocalFeedLoader(currentDate: Date.init, store: store)
+    }()
+    
+    func makeRemoteFeedLoaderWithFallbackToLocal() -> FeedLoader.Publisher {
+        client
+            .getPublisher(url: remoteURL)
+            .tryMap(FeedItemsMapper.map)
             .caching(to: localFeedLoader)
             .fallback(to: localFeedLoader.loadPublisher)
     }

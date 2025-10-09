@@ -35,7 +35,7 @@ struct RootViewControllerWrapper: UIViewControllerRepresentable {
 #endif
         
         let feedViewController = FeedUIComposer.feedComposedWith(
-            feedLoader: factory.makeFeedLoader,
+            feedLoader: factory.makeRemoteFeedLoaderWithFallbackToLocal,
             imageLoader: factory.makeImageDataLoader
         )
         return UINavigationController(rootViewController: feedViewController)
