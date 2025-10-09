@@ -28,6 +28,10 @@ class DataLoaderFactory {
         LocalFeedLoader(currentDate: Date.init, store: store)
     }()
     
+    private lazy var localImageLoader: LocalFeedImageDataLoader = {
+        LocalFeedImageDataLoader(store: store)
+    }()
+    
     func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<[FeedImage], Error> {
         client
             .getPublisher(url: remoteURL)
@@ -37,16 +41,14 @@ class DataLoaderFactory {
     }
     
     func makeImageDataLoader(for url: URL) -> FeedImageDataLoader.Publisher {
-        let localImageLoader = LocalFeedImageDataLoader(store: store)
-        let remoteImageLoader = RemoteFeedImageDataLoader(client: client)
-        
-        return localImageLoader
+        localImageLoader
             .loadImageDataPublisher(from: url)
-            .fallback(to: {
-                remoteImageLoader
-                    .loadImageDataPublisher(from: url)
+            .fallback { [client, localImageLoader] in
+                client
+                    .getPublisher(url: url)
+                    .tryMap(FeedImageDataMapper.map)
                     .caching(to: localImageLoader, using: url)
-            })
+            }
     }
     
     func makeRemoteClient() -> HTTPClient {
