@@ -28,7 +28,7 @@ class DataLoaderFactory {
         LocalFeedLoader(currentDate: Date.init, store: store)
     }()
     
-    func makeRemoteFeedLoaderWithFallbackToLocal() -> FeedLoader.Publisher {
+    func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<[FeedImage], Error> {
         client
             .getPublisher(url: remoteURL)
             .tryMap(FeedItemsMapper.map)
