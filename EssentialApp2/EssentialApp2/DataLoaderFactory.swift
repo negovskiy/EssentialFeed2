@@ -53,5 +53,3 @@ class DataLoaderFactory {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
     }
 }
-
-extension RemoteLoader: @retroactive FeedLoader where Resource == [FeedImage] {}
