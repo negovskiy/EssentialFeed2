@@ -8,14 +8,15 @@
 #if DEBUG
 import UIKit
 import EssentialFeed2
+import Combine
 
 class DebuggingDataLoaderFactory: DataLoaderFactory {
-    override func makeLoaders() -> (feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
+    override func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<[FeedImage], any Error> {
         if CommandLine.arguments.contains("-reset") {
             try? FileManager.default.removeItem(at: localStoreURL)
         }
         
-        return super.makeLoaders()
+        return super.makeRemoteFeedLoaderWithFallbackToLocal()
     }
     
     override func makeRemoteClient() -> HTTPClient {

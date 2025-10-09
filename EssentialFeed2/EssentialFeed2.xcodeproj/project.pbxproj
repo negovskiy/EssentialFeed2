@@ -65,7 +65,6 @@
 		5510A0322DC0C863005553F1 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2APIEndToEndTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Feed API/Helpers/HTTPClientSpy.swift",
 				Helpers/SharedTestHelpers.swift,
 				"Helpers/XCTestCase+MemoryLeakTracking.swift",
 			);
@@ -74,7 +73,6 @@
 		55241B582E0C000E003B0759 /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2iOSTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Feed API/Helpers/HTTPClientSpy.swift",
 				"Helpers/XCTestCase+MemoryLeakTracking.swift",
 			);
 			target = 550DB4ED2E07FD22008DA93E /* EssentialFeed2iOSTests */;
@@ -82,7 +80,6 @@
 		553766C92DF326020034262D /* Exceptions for "EssentialFeed2Tests" folder in "EssentialFeed2CacheIntegrationTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Feed API/Helpers/HTTPClientSpy.swift",
 				"Feed Cache/Helpers/FeedCacheTestHelpers.swift",
 				Helpers/SharedTestHelpers.swift,
 				"Helpers/XCTestCase+MemoryLeakTracking.swift",
@@ -195,15 +192,15 @@
 		559DC9DF2DB2661B002CB144 = {
 			isa = PBXGroup;
 			children = (
-				55F27DF72E116F3A004A2993 /* Test Plans */,
 				559DC9EB2DB2661B002CB144 /* EssentialFeed2 */,
-				559DC9F52DB2661B002CB144 /* EssentialFeed2Tests */,
 				5510A0282DC0C347005553F1 /* EssentialFeed2APIEndToEndTests */,
 				553766BE2DF3238F0034262D /* EssentialFeed2CacheIntegrationTests */,
 				550DB4E72E07FD22008DA93E /* EssentialFeed2iOS */,
 				550DB4F22E07FD22008DA93E /* EssentialFeed2iOSTests */,
+				559DC9F52DB2661B002CB144 /* EssentialFeed2Tests */,
 				558A75062E0D4CB70023F275 /* Frameworks */,
 				559DC9EA2DB2661B002CB144 /* Products */,
+				55F27DF72E116F3A004A2993 /* Test Plans */,
 			);
 			sourceTree = "<group>";
 		};
@@ -387,7 +384,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					550DB4E52E07FD22008DA93E = {
 						CreatedOnToolsVersion = 16.3;
@@ -806,6 +803,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -863,6 +861,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -877,6 +876,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -927,6 +927,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;

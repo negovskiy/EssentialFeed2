@@ -12,8 +12,8 @@ protocol FeedLoaderTestCase: XCTestCase {}
 
 extension FeedLoaderTestCase {
     func expect(
-        _ sut: FeedLoader,
-        toCompleteWith expectedResult: FeedLoader.Result,
+        _ sut: LocalFeedLoader,
+        toCompleteWith expectedResult: Swift.Result<[FeedImage], Error>,
         file: StaticString = #file,
         line: UInt = #line
     ) {

@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import Combine
 import EssentialFeed2
 import EssentialFeed2iOS
 
 extension FeedUIIntegrationTests {
-    class LoaderSpy: FeedLoader, FeedImageDataLoader {
+    class LoaderSpy: FeedImageDataLoader {
         
         // MARK: - FeedLoader
         
@@ -18,19 +19,21 @@ extension FeedUIIntegrationTests {
             feedRequests.count
         }
         
-        private var feedRequests: [(FeedLoader.Result) -> Void] = []
+        private var feedRequests: [PassthroughSubject<[FeedImage], Error>] = []
         
-        func load(completion: @escaping (FeedLoader.Result) -> Void) {
-            feedRequests.append(completion)
+        func loadPublisher() -> AnyPublisher<[FeedImage], Error> {
+            let publisher = PassthroughSubject<[FeedImage], Error>()
+            feedRequests.append(publisher)
+            return publisher.eraseToAnyPublisher()
         }
         
         func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
-            feedRequests[index](.success(feed))
+            feedRequests[index].send(feed)
         }
         
         func completeFeedLoadingWithError(at index: Int) {
             let error = NSError(domain: "an error", code: 0)
-            feedRequests[index](.failure(error))
+            feedRequests[index].send(completion: (.failure(error)))
         }
         
         // MARK: - ImageDataLoader
