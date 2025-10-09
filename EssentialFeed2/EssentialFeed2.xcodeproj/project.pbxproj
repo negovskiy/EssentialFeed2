@@ -67,7 +67,6 @@
 			membershipExceptions = (
 				Helpers/SharedTestHelpers.swift,
 				"Helpers/XCTestCase+MemoryLeakTracking.swift",
-				"Shared API/Helpers/HTTPClientSpy.swift",
 			);
 			target = 5510A0262DC0C347005553F1 /* EssentialFeed2APIEndToEndTests */;
 		};
@@ -75,7 +74,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Helpers/XCTestCase+MemoryLeakTracking.swift",
-				"Shared API/Helpers/HTTPClientSpy.swift",
 			);
 			target = 550DB4ED2E07FD22008DA93E /* EssentialFeed2iOSTests */;
 		};
@@ -85,7 +83,6 @@
 				"Feed Cache/Helpers/FeedCacheTestHelpers.swift",
 				Helpers/SharedTestHelpers.swift,
 				"Helpers/XCTestCase+MemoryLeakTracking.swift",
-				"Shared API/Helpers/HTTPClientSpy.swift",
 			);
 			target = 553766BC2DF3238F0034262D /* EssentialFeed2CacheIntegrationTests */;
 		};
