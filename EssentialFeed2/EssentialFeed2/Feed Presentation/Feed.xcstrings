@@ -1,29 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "FEED_VIEW_CONNECTION_ERROR" : {
-      "comment" : "Error message displayed when we can't load the image feed from the server",
-      "localizations" : {
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Δεν ήταν δυνατή η σύνδεση στο διακομιστή"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Couldn't connect to server"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível conectar com o servidor"
-          }
-        }
-      }
-    },
     "FEED_VIEW_TITLE" : {
       "comment" : "Title for the feed view",
       "localizations" : {
@@ -43,6 +20,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meu Feed"
+          }
+        }
+      }
+    },
+    "GENERIC_CONNECTION_ERROR" : {
+      "comment" : "Error message displayed when we can't load the image feed from the server",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δεν ήταν δυνατή η σύνδεση στο διακομιστή"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't connect to server"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível conectar com o servidor"
           }
         }
       }
