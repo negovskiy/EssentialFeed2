@@ -11,14 +11,10 @@ public protocol FeedView {
     func display(_ viewModel: FeedViewModel)
 }
 
-public protocol FeedErrorView {
-    func display(_ viewModel: FeedErrorViewModel)
-}
-
 public class FeedPresenter {
     private let loadingView: ResourceLoadingView
     private let feedView: FeedView
-    private let errorView: FeedErrorView
+    private let errorView: ResourceErrorView
     
     public static var title: String {
         String(
@@ -37,7 +33,7 @@ public class FeedPresenter {
             comment: "Error message displayed when we can't load the image feed from the server")
     }
     
-    public init(loadingView: ResourceLoadingView, feedView: FeedView, errorView: FeedErrorView) {
+    public init(loadingView: ResourceLoadingView, feedView: FeedView, errorView: ResourceErrorView) {
         self.loadingView = loadingView
         self.feedView = feedView
         self.errorView = errorView

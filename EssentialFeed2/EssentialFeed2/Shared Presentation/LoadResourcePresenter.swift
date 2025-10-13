@@ -19,7 +19,7 @@ public final class LoadResourcePresenter<Resource, View: ResourceView> {
     
     private let loadingView: ResourceLoadingView
     private let resourceView: View
-    private let errorView: FeedErrorView
+    private let errorView: ResourceErrorView
     private let mapper: Mapper
     
     public static var loadError: String {
@@ -30,7 +30,7 @@ public final class LoadResourcePresenter<Resource, View: ResourceView> {
             comment: "Error message displayed when we can't load the image feed from the server")
     }
     
-    public init(loadingView: ResourceLoadingView, resourceView: View, errorView: FeedErrorView, mapper: @escaping Mapper) {
+    public init(loadingView: ResourceLoadingView, resourceView: View, errorView: ResourceErrorView, mapper: @escaping Mapper) {
         self.loadingView = loadingView
         self.resourceView = resourceView
         self.errorView = errorView
