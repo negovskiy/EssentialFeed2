@@ -27,7 +27,7 @@ public final class LoadResourcePresenter<Resource, View: ResourceView> {
             localized: "GENERIC_CONNECTION_ERROR",
             table: "Shared",
             bundle: Bundle(for: LoadResourcePresenter.self),
-            comment: "Error message displayed when we can't load the image feed from the server")
+            comment: "Error message displayed when we can't load resource from the server")
     }
     
     public init(loadingView: ResourceLoadingView, resourceView: View, errorView: ResourceErrorView, mapper: @escaping Mapper) {

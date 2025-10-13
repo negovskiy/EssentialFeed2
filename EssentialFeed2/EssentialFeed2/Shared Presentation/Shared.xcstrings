@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "GENERIC_CONNECTION_ERROR" : {
-      "comment" : "Error message displayed when we can't load the image feed from the server",
+      "comment" : "Error message displayed when we can't load resource from the server\nError message displayed when we can't load the image feed from the server",
       "localizations" : {
         "el" : {
           "stringUnit" : {
