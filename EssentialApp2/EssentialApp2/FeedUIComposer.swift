@@ -22,10 +22,11 @@ public enum FeedUIComposer {
             title: FeedPresenter.title
         )
         
-        presentationAdapter.presenter = FeedPresenter(
+        presentationAdapter.presenter = LoadResourcePresenter(
             loadingView: WeakRefVirtualProxy(feedController),
-            feedView: FeedViewAdapter(controller: feedController, imageLoader: imageLoader),
-            errorView: WeakRefVirtualProxy(feedController)
+            resourceView: FeedViewAdapter(controller: feedController, imageLoader: imageLoader),
+            errorView: WeakRefVirtualProxy(feedController),
+            mapper: FeedPresenter.map
         )
         
         return feedController
