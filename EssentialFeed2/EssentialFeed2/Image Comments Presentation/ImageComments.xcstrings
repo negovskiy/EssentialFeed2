@@ -1,25 +1,25 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "FEED_VIEW_TITLE" : {
+    "IMAGE_COMMENTS_VIEW_TITLE" : {
       "comment" : "Title for the feed view",
       "localizations" : {
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Το Feed μου"
+            "value" : "Σχόλια"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "My Feed"
+            "value" : "Comments"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Meu Feed"
+            "value" : "Comentários"
           }
         }
       }
