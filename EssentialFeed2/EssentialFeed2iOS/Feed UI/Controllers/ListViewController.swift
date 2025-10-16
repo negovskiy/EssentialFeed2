@@ -18,7 +18,7 @@ public protocol CellController {
     func cancelLoad()
 }
 
-final public class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, ResourceLoadingView, ResourceErrorView {
+final public class ListViewController: UITableViewController, UITableViewDataSourcePrefetching, ResourceLoadingView, ResourceErrorView {
     @IBOutlet public var errorView: ErrorView?
     
     @IBAction private func refresh() {
@@ -33,7 +33,7 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
         didSet { tableView.reloadData() }
     }
     
-    private var onViewDidAppear: ((FeedViewController) -> Void)?
+    private var onViewDidAppear: ((ListViewController) -> Void)?
     
     public convenience init?(coder: NSCoder, delegate: FeedViewControllerDelegate) {
         self.init(coder: coder)
