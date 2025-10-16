@@ -18,10 +18,8 @@ public enum FeedUIComposer {
     ) -> ListViewController {
         let presentationAdapter =
         LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>(loader: feedLoader)
-        let feedController = makeWith(
-            delegate: presentationAdapter,
-            title: FeedPresenter.title
-        )
+        let feedController = makeWith(title: FeedPresenter.title)
+        feedController.onRefresh = presentationAdapter.loadResource
         
         presentationAdapter.presenter = LoadResourcePresenter(
             loadingView: WeakRefVirtualProxy(feedController),
@@ -33,11 +31,11 @@ public enum FeedUIComposer {
         return feedController
     }
     
-    private static func makeWith(delegate: FeedViewControllerDelegate, title: String) -> ListViewController {
+    private static func makeWith(title: String) -> ListViewController {
         let bundle = Bundle(for: ListViewController.self)
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
         let feedController = storyboard.instantiateInitialViewController { coder in
-            ListViewController(coder: coder, delegate: delegate)
+            ListViewController(coder: coder)
         }!
         feedController.title = title
         return feedController
