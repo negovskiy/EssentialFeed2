@@ -40,7 +40,7 @@ extension FeedImageCellController: ResourceView, ResourceLoadingView, ResourceEr
     }
 }
 
-extension FeedImageCellController:  CellController {
+extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, UITableViewDataSourcePrefetching {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         1
     }
