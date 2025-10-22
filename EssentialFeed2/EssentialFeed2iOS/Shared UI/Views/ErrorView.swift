@@ -5,13 +5,9 @@
 //  Created by Andrey Negovskiy on 7/2/25.
 //
 
-
 import UIKit
 
 public final class ErrorView: UIView {
-    
-    @IBOutlet private var label: UILabel!
-    
     @IBAction private func tapAction() { hideMessageAnimated() }
     
     public var message: String? {
@@ -19,11 +15,45 @@ public final class ErrorView: UIView {
         set { setMessageAnimated(newValue) }
     }
     
+    private lazy var label: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 17)
+        return label
+    }()
+    
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        configure()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
     public override func awakeFromNib() {
-        super.awakeFromNib()
+        hideMessage()
+    }
+    
+    private func configure() {
+        hideMessage()
+        backgroundColor = .errorBackgroundColor
         
-        label.text = nil
-        alpha = 0
+        configureLabel()
+    }
+    
+    private func configureLabel() {
+        addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
+        ])
     }
     
     private var isVisible: Bool {
@@ -51,8 +81,19 @@ public final class ErrorView: UIView {
             withDuration: 0.3,
             animations: { self.alpha = 0 },
             completion: { completed in
-                if completed { self.label.text = nil }
+                if completed { self.hideMessage() }
             }
         )
+    }
+    
+    private func hideMessage() {
+        label.text = nil
+        alpha = 0
+    }
+}
+
+extension UIColor {
+    static var errorBackgroundColor: UIColor {
+        UIColor(red: 0.99951404330000004, green: 0.41759261489999999, blue: 0.4154433012, alpha: 1)
     }
 }

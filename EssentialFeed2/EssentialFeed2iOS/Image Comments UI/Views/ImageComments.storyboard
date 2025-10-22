@@ -15,38 +15,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="o7g-pU-WRj" customClass="ErrorView" customModule="EssentialFeed2iOS" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="34"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="avb-Kk-WOF">
-                                    <rect key="frame" x="0.0" y="8" width="393" height="18"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" systemColor="systemRedColor"/>
-                            <gestureRecognizers/>
-                            <constraints>
-                                <constraint firstItem="avb-Kk-WOF" firstAttribute="top" secondItem="o7g-pU-WRj" secondAttribute="top" constant="8" id="DSn-lZ-2mT"/>
-                                <constraint firstAttribute="bottom" secondItem="avb-Kk-WOF" secondAttribute="bottom" constant="8" id="Jse-jT-eNY"/>
-                                <constraint firstAttribute="trailing" secondItem="avb-Kk-WOF" secondAttribute="trailing" id="SPD-Au-P0T"/>
-                                <constraint firstItem="avb-Kk-WOF" firstAttribute="leading" secondItem="o7g-pU-WRj" secondAttribute="leading" id="uJq-Vi-DqO"/>
-                            </constraints>
-                            <connections>
-                                <outlet property="label" destination="avb-Kk-WOF" id="T5o-go-gpi"/>
-                                <outletCollection property="gestureRecognizers" destination="LZF-QA-ckY" appends="YES" id="0jv-t2-VUn"/>
-                            </connections>
-                        </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="bV1-dM-fuV">
-                            <rect key="frame" x="0.0" y="305" width="393" height="16"/>
+                            <rect key="frame" x="0.0" y="271" width="393" height="16"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageCommentCell" rowHeight="193" id="IHr-vF-SNT" customClass="ImageCommentCell" customModule="EssentialFeed2iOS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="84" width="393" height="193"/>
+                                <rect key="frame" x="0.0" y="50" width="393" height="193"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IHr-vF-SNT" id="DUU-4l-C13">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="193"/>
@@ -115,29 +91,19 @@
                             <action selector="refresh" destination="3IJ-Dv-5up" eventType="valueChanged" id="COt-hh-PbG"/>
                         </connections>
                     </refreshControl>
-                    <connections>
-                        <outlet property="errorView" destination="o7g-pU-WRj" id="Dde-JQ-Vhr"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KOd-r0-FVQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="LZF-QA-ckY">
-                    <connections>
-                        <action selector="tapAction" destination="o7g-pU-WRj" id="PiB-X1-TQR"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer id="LZF-QA-ckY"/>
             </objects>
             <point key="canvasLocation" x="939.69465648854953" y="-99.295774647887328"/>
         </scene>
     </scenes>
     <resources>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
