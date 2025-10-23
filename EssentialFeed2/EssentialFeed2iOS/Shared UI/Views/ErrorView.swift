@@ -17,12 +17,12 @@ public final class ErrorView: UIButton {
 
     private var titleAttributes: AttributeContainer {
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = .center
+        paragraphStyle.alignment = NSTextAlignment.center
         
-        var attributes = AttributeContainer()
-        attributes.paragraphStyle = paragraphStyle
-        attributes.font = .body
-        return attributes
+        return AttributeContainer([
+            .paragraphStyle: paragraphStyle,
+            .font: UIFont.preferredFont(forTextStyle: .body)
+        ])
     }
     
     override public init(frame: CGRect) {
@@ -48,7 +48,7 @@ public final class ErrorView: UIButton {
         configuration.background.backgroundColor = .errorBackgroundColor
         configuration.background.cornerRadius = 0
         self.configuration = configuration
-        
+                
         addTarget(self, action: #selector(hideMessageAnimated), for: .touchUpInside)
     }
     

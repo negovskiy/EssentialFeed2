@@ -15,8 +15,20 @@ final class ImageCommentsSnapshotTests: XCTestCase {
         
         sut.display(comments())
         
-        assert(snapshot: sut.snapshot(for: .iPhone17ProMax(.light)), named: "IMAGE_COMMENTS_light")
-        assert(snapshot: sut.snapshot(for: .iPhone17ProMax(.dark)), named: "IMAGE_COMMENTS_dark")
+        assert(
+            snapshot: sut.snapshot(for: .iPhone17ProMax(.light)),
+            named: "IMAGE_COMMENTS_light"
+        )
+        
+        assert(
+            snapshot: sut.snapshot(for: .iPhone17ProMax(.dark)),
+            named: "IMAGE_COMMENTS_dark"
+        )
+        
+        assert(
+            snapshot: sut.snapshot(for: .iPhone17ProMax(.light, contentSize: .extraExtraExtraLarge)),
+            named: "IMAGE_COMMENTS_light_extraExtraExtraLarge"
+        )
     }
     
     // MARK: - Helpers
