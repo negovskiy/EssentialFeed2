@@ -18,9 +18,9 @@ private final class SnapshotWindow: UIWindow {
     
     convenience init(configuration: SnapshotConfiguration, root: UIViewController) {
         self.init(frame: .init(origin: .zero, size: configuration.size))
+        configuration.overrideTraitCollection(of: root)
         self.configuration = configuration
         self.layoutMargins = configuration.layoutMargins
-        self.overrideUserInterfaceStyle = configuration.traitCollection.userInterfaceStyle
         self.rootViewController = root
         self.isHidden = false
         root.view.layoutMargins = configuration.layoutMargins

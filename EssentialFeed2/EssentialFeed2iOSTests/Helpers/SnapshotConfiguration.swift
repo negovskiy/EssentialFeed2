@@ -38,4 +38,16 @@ struct SnapshotConfiguration {
             traitCollection: traitCollection
         )
     }
+    
+    func overrideTraitCollection(of viewController: UIViewController) {
+        viewController.traitOverrides.userInterfaceStyle = traitCollection.userInterfaceStyle
+        viewController.traitOverrides.forceTouchCapability = traitCollection.forceTouchCapability
+        viewController.traitOverrides.layoutDirection = traitCollection.layoutDirection
+        viewController.traitOverrides.preferredContentSizeCategory = traitCollection.preferredContentSizeCategory
+        viewController.traitOverrides.userInterfaceIdiom = traitCollection.userInterfaceIdiom
+        viewController.traitOverrides.horizontalSizeClass = traitCollection.horizontalSizeClass
+        viewController.traitOverrides.verticalSizeClass = traitCollection.verticalSizeClass
+        viewController.traitOverrides.displayScale = traitCollection.displayScale
+        viewController.traitOverrides.displayGamut = traitCollection.displayGamut
+    }
 }
