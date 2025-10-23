@@ -15,12 +15,15 @@ struct SnapshotConfiguration {
     let layoutMargins: UIEdgeInsets
     let traitCollection: UITraitCollection
     
-    static func iPhone17ProMax(_ style: UIUserInterfaceStyle) -> Self {
+    static func iPhone17ProMax(
+        _ style: UIUserInterfaceStyle,
+        contentSize: UIContentSizeCategory = .medium
+    ) -> Self {
         let traitCollection = UITraitCollection { mutableTraits in
             mutableTraits.userInterfaceStyle = style
             mutableTraits.forceTouchCapability = .available
             mutableTraits.layoutDirection = .leftToRight
-            mutableTraits.preferredContentSizeCategory = .medium
+            mutableTraits.preferredContentSizeCategory = contentSize
             mutableTraits.userInterfaceIdiom = .phone
             mutableTraits.horizontalSizeClass = .compact
             mutableTraits.verticalSizeClass = .regular
