@@ -18,9 +18,11 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
     public var onRefresh: (() -> Void)?
         
     private lazy var dataSource: UITableViewDiffableDataSource<Int, CellController> = {
-        .init(tableView: tableView) { tableView, indexPath, controller in
+        let ds = UITableViewDiffableDataSource<Int, CellController>(tableView: tableView) { tableView, indexPath, controller in
             controller.dataSource.tableView(tableView, cellForRowAt: indexPath)
         }
+        ds.defaultRowAnimation = .fade
+        return ds
     }()
     
     private var onViewDidAppear: ((ListViewController) -> Void)?
@@ -32,13 +34,14 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-                
+
         onViewDidAppear = { vc in
             vc.onViewDidAppear = nil
             vc.refresh()
         }
-        
+
         tableView.dataSource = dataSource
+        tableView.prefetchDataSource = self
         configureErrorView()
     }
     
@@ -58,7 +61,7 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
         var snapshot = NSDiffableDataSourceSnapshot<Int, CellController>()
         snapshot.appendSections([0])
         snapshot.appendItems(cellControllers)
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     public func display(_ viewModel: ResourceLoadingViewModel) {
@@ -67,6 +70,11 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
     
     public func display(_ viewModel: ResourceErrorViewModel) {
         errorView.message = viewModel.message
+    }
+    
+    public override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let delegate = cellController(forRowAt: indexPath)?.delegate
+        delegate?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

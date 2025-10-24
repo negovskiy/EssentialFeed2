@@ -42,6 +42,16 @@ extension ListViewController {
         ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
     }
     
+    @discardableResult
+    func simulateFeedImageBecomingVisibleAgain(at row: Int) -> FeedImageCell? {
+        let view = simulateFeedImageViewNotVisible(at: row)
+        
+        let index = IndexPath(row: row, section: feedImagesSection)
+        tableView.delegate?.tableView?(tableView, willDisplay: view!, forRowAt: index)
+        
+        return view
+    }
+    
     func simulateErrorViewTap() {
         errorView.simulateTap()
     }

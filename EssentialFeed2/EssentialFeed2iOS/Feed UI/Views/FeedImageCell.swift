@@ -8,7 +8,7 @@
 import UIKit
 
 public final class FeedImageCell: UITableViewCell {
-
+    
     @IBOutlet private(set) public var locationContainer: UIView!
     @IBOutlet private(set) public var locationLabel: UILabel!
     @IBOutlet private(set) public var descriptionLabel: UILabel!
@@ -21,4 +21,12 @@ public final class FeedImageCell: UITableViewCell {
     }
     
     var onRetry: (() -> Void)?
+    var onReuse: (() -> Void)?
+    
+    
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        onReuse?()
+    }
 }
