@@ -40,9 +40,7 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
             vc.refresh()
         }
 
-        tableView.dataSource = dataSource
-        tableView.prefetchDataSource = self
-        configureErrorView()
+        configureTableView()
     }
     
     public override func viewDidLayoutSubviews() {
@@ -102,6 +100,12 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
 }
 
 private extension ListViewController {
+    private func configureTableView() {
+        tableView.dataSource = dataSource
+        tableView.prefetchDataSource = self
+        configureErrorView()
+    }
+    
     private func configureErrorView() {
         let container = errorView.makeContainer()
         tableView.tableHeaderView = container
