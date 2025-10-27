@@ -17,7 +17,7 @@ public enum CommentsUIComposer {
     ) -> ListViewController {
         let presentationAdapter =
         LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>(loader: commentsLoader)
-        let feedController = makeWith(title: FeedPresenter.title)
+        let feedController = makeWith(title: ImageCommentsPresenter.title)
         feedController.onRefresh = presentationAdapter.loadResource
         
         presentationAdapter.presenter = LoadResourcePresenter(
