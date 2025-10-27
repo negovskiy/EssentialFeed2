@@ -28,3 +28,20 @@ extension XCTestCase {
         ]
     }
 }
+
+class DummyView: ResourceView {
+    typealias ResourceViewModel = Any
+    func display(_ viewModel: ResourceViewModel) {}
+}
+
+var errorMessage: String {
+    LoadResourcePresenter<Any, DummyView>.loadError
+}
+
+var feedTitle: String {
+    FeedPresenter.title
+}
+
+var commentsTitle: String {
+    ImageCommentsPresenter.title
+}
