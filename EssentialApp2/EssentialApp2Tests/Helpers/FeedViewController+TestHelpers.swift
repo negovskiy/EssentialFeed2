@@ -13,6 +13,20 @@ extension ListViewController {
         refreshControl?.simulatePullToRefresh()
     }
     
+    func simulateErrorViewTap() {
+        errorView.simulateTap()
+    }
+    
+    var errorMessage: String? {
+        errorView.message
+    }
+    
+    func isShowingLoadingIndicator() -> Bool {
+        refreshControl?.isRefreshing == true
+    }
+}
+
+extension ListViewController {
     @discardableResult
     func simulateFeedImageViewVisible(at row: Int) -> FeedImageCell? {
         feedImageView(at: row) as? FeedImageCell
@@ -52,18 +66,6 @@ extension ListViewController {
         return view
     }
     
-    func simulateErrorViewTap() {
-        errorView.simulateTap()
-    }
-    
-    var errorMessage: String? {
-        errorView.message
-    }
-    
-    func isShowingLoadingIndicator() -> Bool {
-        refreshControl?.isRefreshing == true
-    }
-    
     func numberOfRenderedFeedImageViews() -> Int {
         guard tableView.numberOfSections > feedImagesSection else {
             return 0
@@ -84,6 +86,42 @@ extension ListViewController {
     
     private var feedImagesSection: Int {
         0
+    }
+}
+
+extension ListViewController {
+    func numberOfRenderedComments() -> Int {
+        guard tableView.numberOfSections > commentsSection else {
+            return 0
+        }
+        
+        return tableView.numberOfRows(inSection: commentsSection)
+    }
+    
+    func commentMessage(at row: Int) -> String? {
+        commentView(at: row)?.messageLabel.text
+    }
+    
+    func commentDate(at row: Int) -> String? {
+        commentView(at: row)?.dateLabel.text
+    }
+    
+    func commentUsername(at row: Int) -> String? {
+        commentView(at: row)?.usernameLabel.text
+    }
+    
+    private var commentsSection: Int {
+        0
+    }
+    
+    private func commentView(at row: Int) -> ImageCommentCell? {
+        guard row < tableView.numberOfRows(inSection: commentsSection) else {
+            return nil
+        }
+        
+        let ds = tableView.dataSource
+        let indexPath = IndexPath(row: row, section: commentsSection)
+        return ds?.tableView(tableView, cellForRowAt: indexPath) as? ImageCommentCell
     }
 }
 
