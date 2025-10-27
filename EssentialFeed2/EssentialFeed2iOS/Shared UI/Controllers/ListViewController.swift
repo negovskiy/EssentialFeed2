@@ -103,18 +103,7 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
 
 private extension ListViewController {
     private func configureErrorView() {
-        let container = UIView()
-        container.backgroundColor = .clear
-        container.addSubview(errorView)
-        
-        errorView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            errorView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            errorView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            errorView.topAnchor.constraint(equalTo: container.topAnchor),
-            errorView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-        ])
-        
+        let container = errorView.makeContainer()
         tableView.tableHeaderView = container
         
         errorView.onHide = { [weak self] in
