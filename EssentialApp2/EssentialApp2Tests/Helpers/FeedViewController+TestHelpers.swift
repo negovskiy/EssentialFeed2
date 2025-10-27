@@ -64,7 +64,7 @@ extension ListViewController {
         refreshControl?.isRefreshing == true
     }
     
-    func numberOfRenderedFeedImageView() -> Int {
+    func numberOfRenderedFeedImageViews() -> Int {
         guard tableView.numberOfSections > feedImagesSection else {
             return 0
         }
