@@ -28,10 +28,10 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.simulateAppearance()
         XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected loader to have been called once")
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedListReload()
         XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected loader to have been called twice")
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedListReload()
         XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected loader to have been called thrice")
     }
     
@@ -44,7 +44,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected loading indicator to be hidden")
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedListReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator(), "Expected loading indicator to be visible")
         
         loader.completeFeedLoadingWithError(at: 1)
@@ -64,7 +64,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(with: [image0], at: 0)
         assertThat(sut, isRendering: [image0])
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedListReload()
         loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
         assertThat(sut, isRendering: [image0, image1, image2, image3])
     }
@@ -80,7 +80,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(with: [image0, image1], at: 0)
         assertThat(sut, isRendering: [image0, image1])
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedListReload()
         loader.completeFeedLoading(with: [], at: 1)
         assertThat(sut, isRendering: [])
         
@@ -94,7 +94,7 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.simulateAppearance()
         loader.completeFeedLoading(with: [image0], at: 0)
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedListReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0])
     }
@@ -108,7 +108,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoadingWithError(at: 0)
         XCTAssertEqual(sut.errorMessage, errorMessage)
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedListReload()
         XCTAssertNil(sut.errorMessage)
     }
     
