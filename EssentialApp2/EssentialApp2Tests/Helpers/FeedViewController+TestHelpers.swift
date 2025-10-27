@@ -8,7 +8,7 @@
 import UIKit
 import EssentialFeed2iOS
 
-extension FeedViewController {
+extension ListViewController {
     func simulateUserInitiatedFeedReload() {
         refreshControl?.simulatePullToRefresh()
     }
@@ -42,8 +42,22 @@ extension FeedViewController {
         ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
     }
     
+    @discardableResult
+    func simulateFeedImageBecomingVisibleAgain(at row: Int) -> FeedImageCell? {
+        let view = simulateFeedImageViewNotVisible(at: row)
+        
+        let index = IndexPath(row: row, section: feedImagesSection)
+        tableView.delegate?.tableView?(tableView, willDisplay: view!, forRowAt: index)
+        
+        return view
+    }
+    
+    func simulateErrorViewTap() {
+        errorView.simulateTap()
+    }
+    
     var errorMessage: String? {
-        errorView?.message
+        errorView.message
     }
     
     func isShowingLoadingIndicator() -> Bool {
@@ -51,7 +65,11 @@ extension FeedViewController {
     }
     
     func numberOfRenderedFeedImageView() -> Int {
-        tableView.numberOfRows(inSection: feedImagesSection)
+        guard tableView.numberOfSections > feedImagesSection else {
+            return 0
+        }
+        
+        return tableView.numberOfRows(inSection: feedImagesSection)
     }
     
     func feedImageView(at row: Int) -> UITableViewCell? {
@@ -69,7 +87,7 @@ extension FeedViewController {
     }
 }
 
-extension FeedViewController {
+extension ListViewController {
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()

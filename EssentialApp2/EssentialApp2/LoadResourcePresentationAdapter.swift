@@ -23,7 +23,7 @@ final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
         presenter?.didStartLoading()
         
         cancellable = loader()
-            .dispatchOnMainQueue()
+            .dispatchOnMainThread()
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
@@ -34,12 +34,6 @@ final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
             }, receiveValue: { [weak self] result in
                 self?.presenter?.didFinishLoading(result)
             })
-    }
-}
-
-extension LoadResourcePresentationAdapter: FeedViewControllerDelegate {
-    func didRequestFeedRefresh() {
-        loadResource()
     }
 }
 

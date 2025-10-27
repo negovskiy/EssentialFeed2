@@ -29,6 +29,6 @@ class EssentialApp2AppTests: XCTestCase {
         let topController = rootNavigation?.topViewController
         
         XCTAssertNotNil(rootNavigation, "Expected to have a UINavigationController as the root view controller. Instead, got \(String(describing: rootViewController)).")
-        XCTAssertNotNil(topController as? FeedViewController, "Expected to have a FeedViewController in the navigation stack. Instead, got \(String(describing: topController)).")
+        XCTAssertNotNil(topController as? ListViewController, "Expected to have a FeedViewController in the navigation stack. Instead, got \(String(describing: topController)).")
     }
 }
