@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import EssentialFeed2
 import EssentialFeed2iOS
 
 @main
@@ -19,6 +20,14 @@ struct EssentialApp2App: App {
 }
 
 struct RootViewControllerWrapper: UIViewControllerRepresentable {
+    private let navigationController = UINavigationController()
+    
+#if DEBUG
+    private let factory = DebuggingDataLoaderFactory()
+#else
+    private let factory = DataLoaderFactory()
+#endif
+    
     func makeUIViewController(context: Context) -> UIViewController {
         makeRootViewController()
     }
@@ -27,17 +36,20 @@ struct RootViewControllerWrapper: UIViewControllerRepresentable {
     }
     
     func makeRootViewController() -> UIViewController {
-        let factory: DataLoaderFactory
-#if DEBUG
-        factory = DebuggingDataLoaderFactory()
-#else
-        factory = DataLoaderFactory()
-#endif
-        
         let feedViewController = FeedUIComposer.feedComposedWith(
             feedLoader: factory.makeRemoteFeedLoaderWithFallbackToLocal,
-            imageLoader: factory.makeImageDataLoader
+            imageLoader: factory.makeImageDataLoader,
+            selection: showComments
         )
-        return UINavigationController(rootViewController: feedViewController)
+        
+        navigationController.viewControllers = [feedViewController]
+        return navigationController
+    }
+    
+    private func showComments(for image: FeedImage) {
+        let comments = CommentsUIComposer.commentsComposedWith(
+            commentsLoader: factory.makeRemoteCommentsLoader(for: image)
+        )
+        navigationController.pushViewController(comments, animated: true)
     }
 }

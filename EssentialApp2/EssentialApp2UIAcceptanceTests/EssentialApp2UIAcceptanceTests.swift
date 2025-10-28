@@ -44,4 +44,21 @@ final class EssentialApp2UIAcceptanceTests: XCTestCase {
         let feedCells = app.cells.matching(identifier: "feed-image-cell")
         XCTAssertEqual(feedCells.count, 0)
     }
+    
+    func test_onFeedImageSelection_displaysComments() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-reset", "-connectivity", "online"]
+        app.launch()
+        
+        let feedCells = app.cells.matching(identifier: "feed-image-cell")
+        feedCells.firstMatch.tap()
+        
+        XCTAssert(app.navigationBars["Comments"].exists)
+        
+        let comments = app.cells.matching(identifier: "comment-cell")
+        
+        RunLoop.main.run()
+        
+        XCTAssertEqual(comments.count, 1)
+    }
 }

@@ -14,7 +14,7 @@ class DataLoaderFactory {
         .defaultDirectoryURL()
         .appendingPathComponent("feed-store.sqlite")
     
-    private let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
+    private let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1")!
     
     private lazy var store: FeedStore & FeedImageDataStore = {
         try! CoreDataFeedStore(storeURL: localStoreURL)
@@ -34,7 +34,7 @@ class DataLoaderFactory {
     
     func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<[FeedImage], Error> {
         client
-            .getPublisher(url: remoteURL)
+            .getPublisher(url: remoteURL.appending(path: "feed/"))
             .tryMap(FeedItemsMapper.map)
             .caching(to: localFeedLoader)
             .fallback(to: localFeedLoader.loadPublisher)
@@ -53,5 +53,14 @@ class DataLoaderFactory {
     
     func makeRemoteClient() -> HTTPClient {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+    }
+    
+    func makeRemoteCommentsLoader(for image: FeedImage) -> () -> AnyPublisher<[ImageComment], Error> {
+        { [client, remoteURL] in
+            client
+                .getPublisher(url: remoteURL.appending(path: "image/\(image.id.uuidString)/comments"))
+                .tryMap(ImageCommentsMapper.map)
+                .eraseToAnyPublisher()
+        }
     }
 }

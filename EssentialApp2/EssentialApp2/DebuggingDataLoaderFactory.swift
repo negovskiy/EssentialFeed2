@@ -65,6 +65,8 @@ private class DebuggingHTTPClient: HTTPClient {
         switch url.absoluteString {
         case "http://image.com":
             makeImageData()
+        case "http://image.com/2AB4B480-404D-446F-940F-000000000001/comments":
+            makeCommentsData()
         default:
             makeFeedData()
         }
@@ -85,8 +87,23 @@ private class DebuggingHTTPClient: HTTPClient {
     private func makeFeedData() -> Data {
         try! JSONSerialization.data(withJSONObject: [
             "items": [
-                ["id": UUID().uuidString, "image": "http://image.com"],
-                ["id": UUID().uuidString, "image": "http://image.com"]
+                ["id": "2AB4B480-404D-446F-940F-000000000001", "image": "http://image.com"],
+                ["id": "2AB4B480-404D-446F-940F-000000000002", "image": "http://image.com"]
+            ]
+        ])
+    }
+    
+    private func makeCommentsData() -> Data {
+        try! JSONSerialization.data(withJSONObject: [
+            "items": [
+                [
+                    "id": "2AB4B480-404D-446F-940F-000000000001",
+                    "message": "a message",
+                    "created_at": "2025-01-01T12:34:56Z",
+                    "author": [
+                        "username": "john"
+                        ]
+                ]
             ]
         ])
     }
