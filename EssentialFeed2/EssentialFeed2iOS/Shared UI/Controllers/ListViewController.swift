@@ -70,6 +70,11 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
         errorView.message = viewModel.message
     }
     
+    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let delegate = cellController(forRowAt: indexPath)?.delegate
+        delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    
     public override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let delegate = cellController(forRowAt: indexPath)?.delegate
         delegate?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)

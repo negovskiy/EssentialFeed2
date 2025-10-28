@@ -19,9 +19,9 @@ extension FeedUIIntegrationTests {
         sut.tableView.layoutIfNeeded()
         RunLoop.main.run(until: Date())
         
-        guard sut.numberOfRenderedFeedImageView() == feed.count else {
+        guard sut.numberOfRenderedFeedImageViews() == feed.count else {
             return XCTFail(
-                "Expected \(feed.count) rendered feed image view(s), but got \(sut.numberOfRenderedFeedImageView()) instead",
+                "Expected \(feed.count) rendered feed image view(s), but got \(sut.numberOfRenderedFeedImageViews()) instead",
                 file: file,
                 line: line
             )
