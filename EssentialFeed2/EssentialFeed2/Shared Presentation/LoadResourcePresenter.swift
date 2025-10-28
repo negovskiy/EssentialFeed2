@@ -30,7 +30,12 @@ public final class LoadResourcePresenter<Resource, View: ResourceView> {
             comment: "Error message displayed when we can't load resource from the server")
     }
     
-    public init(loadingView: ResourceLoadingView, resourceView: View, errorView: ResourceErrorView, mapper: @escaping Mapper) {
+    public init(
+        loadingView: ResourceLoadingView,
+        resourceView: View,
+        errorView: ResourceErrorView,
+        mapper: @escaping Mapper
+    ) {
         self.loadingView = loadingView
         self.resourceView = resourceView
         self.errorView = errorView
