@@ -11,7 +11,7 @@ import EssentialFeed2
 import Combine
 
 class DebuggingDataLoaderFactory: DataLoaderFactory {
-    override func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<[FeedImage], any Error> {
+    override func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<Paginated<FeedImage>, any Error> {
         if CommandLine.arguments.contains("-reset") {
             try? FileManager.default.removeItem(at: localStoreURL)
         }

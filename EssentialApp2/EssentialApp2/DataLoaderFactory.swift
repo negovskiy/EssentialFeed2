@@ -32,12 +32,16 @@ class DataLoaderFactory {
         LocalFeedImageDataLoader(store: store)
     }()
     
-    func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<[FeedImage], Error> {
+    func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<Paginated<FeedImage>, Error> {
         client
             .getPublisher(url: remoteURL.appending(path: "feed/"))
             .tryMap(FeedItemsMapper.map)
             .caching(to: localFeedLoader)
             .fallback(to: localFeedLoader.loadPublisher)
+            .map {
+                Paginated(items: $0)
+            }
+            .eraseToAnyPublisher()
     }
     
     func makeImageDataLoader(for url: URL) -> FeedImageDataLoader.Publisher {
