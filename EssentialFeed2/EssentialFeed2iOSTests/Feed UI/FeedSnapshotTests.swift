@@ -72,6 +72,29 @@ class FeedSnapshotTests: XCTestCase {
         )
     }
     
+    func test_feedWithLoadMoreError() {
+        let sut = makeSUT()
+        
+        sut.display(feedWithLoadMoreError())
+        
+        assert(
+            snapshot: sut.snapshot(for: .iPhone17ProMax(.light)),
+            named: "FEED_WITH_LOAD_MORE_ERROR_light"
+        )
+        
+        assert(
+            snapshot: sut.snapshot(for: .iPhone17ProMax(.dark)),
+            named: "FEED_WITH_LOAD_MORE_ERROR_dark"
+        )
+        
+        assert(
+            snapshot: sut.snapshot(
+                for: .iPhone17ProMax(.light, contentSize: .extraExtraExtraLarge)
+            ),
+            named: "FEED_WITH_LOAD_MORE_ERROR_light_extraExtraExtraLarge"
+        )
+    }
+    
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> ListViewController {
         let bundle = Bundle(for: ListViewController.self)
@@ -107,6 +130,18 @@ class FeedSnapshotTests: XCTestCase {
     }
     
     private func feedWithLoadMoreIndicator() -> [CellController] {
+        let loadMore = LoadMoreCellController()
+        loadMore.display(.init(isLoading: true))
+        return feedWith(loadMore: loadMore)
+    }
+    
+    private func feedWithLoadMoreError() -> [CellController] {
+        let loadMore = LoadMoreCellController()
+        loadMore.display(.init(message: "This is a \nmultiline error message"))
+        return feedWith(loadMore: loadMore)
+    }
+    
+    private func feedWith(loadMore: LoadMoreCellController) -> [CellController] {
         let stub = feedWithContent().first!
         let controller = FeedImageCellController(
             viewModel: stub.viewModel,
@@ -115,8 +150,6 @@ class FeedSnapshotTests: XCTestCase {
         )
         stub.controller = controller
         
-        let loadMore = LoadMoreCellController()
-        loadMore.display(.init(isLoading: true))
         return [CellController(UUID(), controller), CellController(UUID(), loadMore)]
     }
 }
