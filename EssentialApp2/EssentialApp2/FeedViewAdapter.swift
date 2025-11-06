@@ -26,35 +26,41 @@ final class FeedViewAdapter: ResourceView {
     }
     
     func display(_ viewModel: Paginated<FeedImage>) {
-        controller?.display(
-            viewModel.items.map { model in
-                let adapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>(loader: { [imageLoader] in
-                    imageLoader(model.url)
-                })
-                
-                let view = FeedImageCellController(
-                    viewModel: FeedImagePresenter.map(model),
-                    delegate: adapter,
-                    selection: { [selection] in
-                        selection(model)
-                    }
-                )
-                
-                adapter.presenter = LoadResourcePresenter(
-                    loadingView: WeakRefVirtualProxy(view),
-                    resourceView: WeakRefVirtualProxy(view),
-                    errorView: WeakRefVirtualProxy(view),
-                    mapper: { data in
-                        guard let image = UIImage.init(data: data) else {
-                            throw InvalidImageData()
-                        }
-                        
-                        return image
-                    }
-                )
-                
-                return CellController(model, view)
+        let feed: [CellController] = viewModel.items.map { model in
+            let adapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>(loader: { [imageLoader] in
+                imageLoader(model.url)
             })
+            
+            let view = FeedImageCellController(
+                viewModel: FeedImagePresenter.map(model),
+                delegate: adapter,
+                selection: { [selection] in
+                    selection(model)
+                }
+            )
+            
+            adapter.presenter = LoadResourcePresenter(
+                loadingView: WeakRefVirtualProxy(view),
+                resourceView: WeakRefVirtualProxy(view),
+                errorView: WeakRefVirtualProxy(view),
+                mapper: { data in
+                    guard let image = UIImage.init(data: data) else {
+                        throw InvalidImageData()
+                    }
+                    
+                    return image
+                }
+            )
+            
+            return CellController(model, view)
+        }
+        
+        let loadMore = LoadMoreCellController {
+            viewModel.loadMore?({ _ in })
+        }
+        let loadMoreSection = [CellController(UUID(), loadMore)]
+        
+        controller?.display(feed, loadMoreSection)
     }
 }
     

@@ -24,6 +24,19 @@ extension ListViewController {
     func isShowingLoadingIndicator() -> Bool {
         refreshControl?.isRefreshing == true
     }
+    
+    func cell(for row: Int, in section: Int) -> UITableViewCell? {
+        guard section < tableView.numberOfSections else {
+            return nil
+        }
+        
+        guard row < tableView.numberOfRows(inSection: section) else {
+            return nil
+        }
+        
+        let indexPath = IndexPath(row: row, section: section)
+        return tableView.dataSource?.tableView(tableView, cellForRowAt: indexPath)
+    }
 }
 
 extension ListViewController {
@@ -62,6 +75,16 @@ extension ListViewController {
         ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
     }
     
+    func simulateLoadMoreFeedAction() {
+        guard let view = cell(for: 0, in: feedLoadMoreSection) else {
+            return
+        }
+        
+        let delegate = tableView.delegate
+        let indexPath = IndexPath(row: 0, section: feedLoadMoreSection)
+        delegate?.tableView?(tableView, willDisplay: view, forRowAt: indexPath)
+    }
+    
     @discardableResult
     func simulateFeedImageBecomingVisibleAgain(at row: Int) -> FeedImageCell? {
         let view = simulateFeedImageViewNotVisible(at: row)
@@ -81,17 +104,15 @@ extension ListViewController {
     }
     
     func feedImageView(at row: Int) -> UITableViewCell? {
-        guard row < tableView.numberOfRows(inSection: feedImagesSection) else {
-            return nil
-        }
-        
-        let ds = tableView.dataSource
-        let indexPath = IndexPath(row: row, section: feedImagesSection)
-        return ds?.tableView(tableView, cellForRowAt: indexPath)
+        cell(for: row, in: feedImagesSection)
     }
     
     private var feedImagesSection: Int {
         0
+    }
+    
+    private var feedLoadMoreSection: Int {
+        1
     }
 }
 
@@ -121,13 +142,7 @@ extension ListViewController {
     }
     
     private func commentView(at row: Int) -> ImageCommentCell? {
-        guard row < tableView.numberOfRows(inSection: commentsSection) else {
-            return nil
-        }
-        
-        let ds = tableView.dataSource
-        let indexPath = IndexPath(row: row, section: commentsSection)
-        return ds?.tableView(tableView, cellForRowAt: indexPath) as? ImageCommentCell
+        cell(for: row, in: commentsSection) as? ImageCommentCell
     }
 }
 
