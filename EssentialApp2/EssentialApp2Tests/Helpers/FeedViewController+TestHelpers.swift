@@ -88,6 +88,10 @@ extension ListViewController {
         loadMoreFeedCell()?.isLoading == true
     }
     
+    var loadMoreFeedErrorMessage: String? {
+        loadMoreFeedCell()?.message
+    }
+    
     private func loadMoreFeedCell() -> LoadMoreCell? {
         cell(for: 0, in: feedLoadMoreSection) as? LoadMoreCell
     }
