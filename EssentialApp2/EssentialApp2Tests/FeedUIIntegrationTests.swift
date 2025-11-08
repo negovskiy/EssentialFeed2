@@ -81,16 +81,16 @@ class FeedUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
-        XCTAssertTrue(sut.isShowingLoadingIndicator(), "Expected loading indicator to be visible")
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be visible")
         
         loader.completeFeedLoading(at: 0)
-        XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected loading indicator to be hidden")
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden")
         
         sut.simulateUserInitiatedListReload()
-        XCTAssertTrue(sut.isShowingLoadingIndicator(), "Expected loading indicator to be visible")
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be visible")
         
         loader.completeFeedLoadingWithError(at: 1)
-        XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected loading indicator to be hidden")
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden")
     }
     
     func test_loadMoreIndicator_isVisibleWhileLoadingMore() {
