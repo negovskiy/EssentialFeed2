@@ -77,13 +77,11 @@ private extension SceneDelegate {
             .eraseToAnyPublisher()
     }
     
-    private func makeRemoteLoadMoreLoader(
-        for items: [FeedImage],
-        last: FeedImage? = nil
-    ) -> AnyPublisher<Paginated<FeedImage>, Error> {
+    private func makeRemoteLoadMoreLoader(last: FeedImage? = nil) -> AnyPublisher<Paginated<FeedImage>, Error> {
         makeRemoteFeedLoader(after: last)
-            .map { newItems in
-                (items + newItems, newItems.last)
+            .zip(localFeedLoader.loadPublisher())
+            .map { (newItems, cachedItems) in
+                (cachedItems + newItems, newItems.last)
             }
             .map(makePage)
             .caching(to: localFeedLoader)
@@ -104,7 +102,7 @@ private extension SceneDelegate {
         Paginated(
             items: items,
             loadMorePublisher: lastItem.map { last in
-                { self.makeRemoteLoadMoreLoader(for: items, last: last) }
+                { self.makeRemoteLoadMoreLoader(last: last) }
             })
     }
     
