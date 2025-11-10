@@ -75,10 +75,37 @@ private extension SceneDelegate {
             .tryMap(FeedItemsMapper.map)
             .caching(to: localFeedLoader)
             .fallback(to: localFeedLoader.loadPublisher)
-            .map {
-                Paginated(items: $0)
+            .map { [weak self] items in
+                Paginated(
+                    items: items,
+                    loadMorePublisher: self?.makeRemoteLoadMoreLoader(for: items, last: items.last)
+                )
             }
             .eraseToAnyPublisher()
+    }
+    
+    private func makeRemoteLoadMoreLoader(
+        for items: [FeedImage],
+        last: FeedImage? = nil
+    ) -> (() -> AnyPublisher<Paginated<FeedImage>, Error>)? {
+        last.map { lastItem in
+            { [httpClient, remoteURL, localFeedLoader] in
+                httpClient
+                    .getPublisher(url: FeedEndpoint.get(after: lastItem).url(from: remoteURL))
+                    .tryMap(FeedItemsMapper.map)
+                    .map { [weak self] newItems in
+                        let allItems = items + newItems
+                        return Paginated(
+                            items: allItems,
+                            loadMorePublisher: self?.makeRemoteLoadMoreLoader(
+                                for: allItems,
+                                last: newItems.last
+                            )
+                        )
+                    }
+                    .caching(to: localFeedLoader)
+            }
+        }
     }
     
     private func makeImageDataLoader(for url: URL) -> FeedImageDataLoader.Publisher {
