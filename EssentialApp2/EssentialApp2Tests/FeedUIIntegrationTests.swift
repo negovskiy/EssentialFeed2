@@ -44,9 +44,14 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.simulateAppearance()
         XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected loader to have been called once")
         
+        sut.simulateAppearance()
+        XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected loader to have been called once")
+        
+        loader.completeFeedLoading()
         sut.simulateUserInitiatedListReload()
         XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected loader to have been called twice")
         
+        loader.completeFeedLoading(at: 1)
         sut.simulateUserInitiatedListReload()
         XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected loader to have been called thrice")
     }
@@ -492,6 +497,30 @@ class FeedUIIntegrationTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1)
+    }
+    
+    func test_feedImageView_doesNotLoadImageAgainUntilPreviousRequestCompletes() {
+        let image = makeImage(url: URL(string: "http://url-0.com")!)
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [image])
+        
+        sut.simulateFeedImageViewNearVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url], "Expected image loaded")
+        
+        sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url], "Expected only one request until previous completes")
+        
+        loader.completeImageLoading()
+        sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url, image.url], "Expected second request after visible when previous complete")
+        
+        sut.simulateFeedImageViewNotVisible(at: 0)
+        XCTAssertEqual(loader.cancelledImageURLs, [image.url], "Expected to cancel request")
+        
+        sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url, image.url, image.url], "Expected third request after visible when visible")
     }
     
     // MARK: - Helpers

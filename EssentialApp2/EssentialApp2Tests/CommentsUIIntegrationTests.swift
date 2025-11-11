@@ -30,8 +30,13 @@ final class CommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadCommentsCallCount, 1, "Expected loader to have been called once")
         
         sut.simulateUserInitiatedListReload()
+        XCTAssertEqual(loader.loadCommentsCallCount, 1, "Expected no requests until previous completes")
+        
+        loader.completeCommentsLoading(at: 0)
+        sut.simulateUserInitiatedListReload()
         XCTAssertEqual(loader.loadCommentsCallCount, 2, "Expected loader to have been called twice")
         
+        loader.completeCommentsLoading(at: 1)
         sut.simulateUserInitiatedListReload()
         XCTAssertEqual(loader.loadCommentsCallCount, 3, "Expected loader to have been called thrice")
     }
@@ -236,6 +241,7 @@ final class CommentsUIIntegrationTests: XCTestCase {
         
         func completeCommentsLoading(with comment: [ImageComment] = [], at index: Int = 0) {
             requests[index].send(comment)
+            requests[index].send(completion: .finished)
         }
         
         func completeCommentsLoadingWithError(at index: Int) {
