@@ -12,6 +12,7 @@ import EssentialFeed2iOS
 final class FeedViewAdapter: ResourceView {
     
     private weak var controller: ListViewController?
+    private let currentFeed: [FeedImage: CellController]
     private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
     private let selection: (FeedImage) -> Void
     
@@ -22,16 +23,25 @@ final class FeedViewAdapter: ResourceView {
     
     init(
         controller: ListViewController?,
+        currentFeed: [FeedImage: CellController] = [:],
         imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
         selection: @escaping (FeedImage) -> Void
     ) {
         self.controller = controller
+        self.currentFeed = currentFeed
         self.imageLoader = imageLoader
         self.selection = selection
     }
     
     func display(_ viewModel: Paginated<FeedImage>) {
+        guard let controller else { return }
+        
+        var currentFeed = self.currentFeed
         let feed: [CellController] = viewModel.items.map { model in
+            if let controller = currentFeed[model] {
+                return controller
+            }
+            
             let adapter = ImageDataPresentationAdapter(loader: { [imageLoader] in
                 imageLoader(model.url)
             })
@@ -57,11 +67,13 @@ final class FeedViewAdapter: ResourceView {
                 }
             )
             
-            return CellController(model, view)
+            let controller = CellController(model, view)
+            currentFeed[model] = controller
+            return controller
         }
         
         guard let loadMorePublisher = viewModel.loadMorePublisher else {
-            controller?.display(feed)
+            controller.display(feed)
             return
         }
         
@@ -70,14 +82,20 @@ final class FeedViewAdapter: ResourceView {
         
         loadMoreAdapter.presenter = LoadResourcePresenter(
             loadingView: WeakRefVirtualProxy(loadMore),
-            resourceView: self,
+            resourceView: FeedViewAdapter(
+                controller: controller,
+                currentFeed: currentFeed,
+                imageLoader: imageLoader,
+                selection: selection
+            ),
             errorView: WeakRefVirtualProxy(loadMore),
-            mapper: { $0 }
+            mapper: { $0
+            }
         )
         
         let loadMoreSection = [CellController(UUID(), loadMore)]
         
-        controller?.display(feed, loadMoreSection)
+        controller.display(feed, loadMoreSection)
     }
 }
     

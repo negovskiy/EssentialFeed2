@@ -7,7 +7,7 @@
 
 import Combine
 import CoreData
-import OSLog
+import os
 import UIKit
 import EssentialFeed2
 
@@ -20,23 +20,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
     
-    private lazy var localFeedLoader: LocalFeedLoader = {
-        LocalFeedLoader(currentDate: Date.init, store: store)
-    }()
-    
-    private lazy var localImageLoader: LocalFeedImageDataLoader = {
-        LocalFeedImageDataLoader(store: store)
-    }()
+    private lazy var logger = Logger(
+        subsystem: "com.negovskiy.EssentialApp2",
+        category: "main"
+    )
     
     private lazy var httpClient: HTTPClient = {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
     }()
     
     private lazy var store: FeedStore & FeedImageDataStore = {
-        try! CoreDataFeedStore(
-            storeURL: NSPersistentContainer
-                .defaultDirectoryURL()
-                .appendingPathComponent("feed-store.sqlite"))
+        do {
+            return try CoreDataFeedStore(
+                storeURL: NSPersistentContainer
+                    .defaultDirectoryURL()
+                    .appendingPathComponent("feed-store.sqlite"))
+        } catch {
+            assertionFailure("Failed to instantiate CoreDataFeedStore: \(error.localizedDescription)")
+            logger.fault("Failed to instantiate CoreDataFeedStore: \(error.localizedDescription)")
+            return NullStore()
+        }
+    }()
+    
+    private lazy var localFeedLoader: LocalFeedLoader = {
+        LocalFeedLoader(currentDate: Date.init, store: store)
+    }()
+    
+    private lazy var localImageLoader: LocalFeedImageDataLoader = {
+        LocalFeedImageDataLoader(store: store)
     }()
     
     private lazy var navigationController = UINavigationController(
