@@ -55,10 +55,12 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
         onViewDidAppear?(self)
     }
     
-    public func display(_ cellControllers: [CellController]) {
+    public func display(_ sections: [CellController]...) {
         var snapshot = NSDiffableDataSourceSnapshot<Int, CellController>()
-        snapshot.appendSections([0])
-        snapshot.appendItems(cellControllers)
+        for (section, cellControllers) in sections.enumerated() {
+            snapshot.appendSections([section])
+            snapshot.appendItems(cellControllers, toSection: section)
+        }
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
@@ -106,6 +108,7 @@ final public class ListViewController: UITableViewController, UITableViewDataSou
 
 private extension ListViewController {
     private func configureTableView() {
+        tableView.delegate = self
         tableView.dataSource = dataSource
         tableView.prefetchDataSource = self
         configureErrorView()
