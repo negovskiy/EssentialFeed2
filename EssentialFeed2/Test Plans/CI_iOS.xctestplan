@@ -1,0 +1,79 @@
+{
+  "configurations" : [
+    {
+      "id" : "209C4CA9-D47C-4EA5-A280-90299F6B236B",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:EssentialFeed2.xcodeproj",
+          "identifier" : "559DC9E82DB2661B002CB144",
+          "name" : "EssentialFeed2"
+        },
+        {
+          "containerPath" : "container:EssentialFeed2.xcodeproj",
+          "identifier" : "550DB4E52E07FD22008DA93E",
+          "name" : "EssentialFeed2iOS"
+        },
+        {
+          "containerPath" : "container:..\/EssentialApp2\/EssentialApp2.xcodeproj",
+          "identifier" : "551F6C242E7457B700225DD3",
+          "name" : "EssentialApp2"
+        }
+      ]
+    },
+    "testExecutionOrdering" : "random",
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:EssentialFeed2.xcodeproj",
+        "identifier" : "5510A0262DC0C347005553F1",
+        "name" : "EssentialFeed2APIEndToEndTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:EssentialFeed2.xcodeproj",
+        "identifier" : "550DB4ED2E07FD22008DA93E",
+        "name" : "EssentialFeed2iOSTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/EssentialApp2\/EssentialApp2.xcodeproj",
+        "identifier" : "55A3FD5B2E8145B50038282E",
+        "name" : "EssentialApp2UIAcceptanceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/EssentialApp2\/EssentialApp2.xcodeproj",
+        "identifier" : "551F6C312E7457B900225DD3",
+        "name" : "EssentialApp2Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:EssentialFeed2.xcodeproj",
+        "identifier" : "559DC9F02DB2661B002CB144",
+        "name" : "EssentialFeed2Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:EssentialFeed2.xcodeproj",
+        "identifier" : "553766BC2DF3238F0034262D",
+        "name" : "EssentialFeed2CacheIntegrationTests"
+      }
+    }
+  ],
+  "version" : 1
+}
