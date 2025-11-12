@@ -78,7 +78,7 @@ extension Publisher where Output == Data {
 
 private extension FeedImageDataCache {
     func saveIgnoringResult(_ data: Data, for url: URL) {
-        saveImageData(data, for: url) { _ in }
+        try? saveImageData(data, for: url)
     }
 }
 

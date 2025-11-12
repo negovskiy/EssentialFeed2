@@ -63,15 +63,12 @@ extension LocalFeedImageDataLoader: FeedImageDataCache {
     public enum SaveError: Swift.Error {
         case failed
     }
-    
-    public typealias SaveResult = FeedImageDataCache.SaveResult
-    
-    public func saveImageData(_ data: Data, for url: URL, completion: @escaping (SaveResult) -> Void) {
-        completion(
-            SaveResult(catching: {
-                try store.insert(data, for: url)
-            })
-            .mapError { _ in SaveError.failed }
-        )
+        
+    public func saveImageData(_ data: Data, for url: URL) throws {
+        do {
+            try store.insert(data, for: url)
+        } catch {
+            throw SaveError.failed
+        }
     }
 }
