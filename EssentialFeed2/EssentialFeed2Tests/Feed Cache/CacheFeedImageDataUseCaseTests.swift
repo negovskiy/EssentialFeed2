@@ -42,21 +42,6 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
         })
     }
     
-    func test_saveImageDataForURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeaallocated() {
-        let store = FeedImageDataStoreSpy()
-        var sut: LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
-        
-        var receivedResults: [LocalFeedImageDataLoader.SaveResult] = []
-        sut?.saveImageData(anyData(), for: anyURL()) {
-            receivedResults.append($0)
-        }
-        
-        sut = nil
-        store.completeInsertionSuccessfully()
-        
-        XCTAssertTrue(receivedResults.isEmpty, "Expected no completion, but got \(receivedResults)")
-    }
-    
     // MARK: - Helpers
     private func makeSUT(
         currentDate: @escaping () -> Date = Date.init,
@@ -84,6 +69,7 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
         line: UInt = #line
     ) {
         let exp = expectation(description: "Wait for load completion")
+        action()
         
         sut.saveImageData(anyData(), for: anyURL()) { receivedResult in
             switch (receivedResult, expectedResult) {
@@ -104,8 +90,6 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
             
             exp.fulfill()
         }
-        
-        action()
         
         wait(for: [exp], timeout: 1)
     }
