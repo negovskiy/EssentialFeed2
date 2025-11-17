@@ -12,7 +12,7 @@ import EssentialFeed2iOS
 import EssentialApp2
 
 extension FeedUIIntegrationTests {
-    class LoaderSpy: FeedImageDataLoader {
+    class LoaderSpy {
         
         // MARK: - FeedLoader
         
@@ -64,35 +64,29 @@ extension FeedUIIntegrationTests {
         
         // MARK: - ImageDataLoader
         
-        private struct FeedImageDataLoaderTaskSpy: FeedImageDataLoaderTask {
-            let cancelCallback: () -> Void
-            func cancel() {
-                cancelCallback()
-            }
-        }
+        private var imageRequests = [(url: URL, publisher: PassthroughSubject<Data, Error>)]()
         
         var loadedImageURLs: [URL] {
-            imageRequests.map(\.url)
+            return imageRequests.map { $0.url }
         }
         
-        private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
-        private(set)var cancelledImageURLs: [URL] = []
+        private(set) var cancelledImageURLs = [URL]()
         
-        func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
-            imageRequests.append((url, completion))
-            
-            return FeedImageDataLoaderTaskSpy { [weak self] in
+        func loadImageDataPublisher(from url: URL) -> AnyPublisher<Data, Error> {
+            let publisher = PassthroughSubject<Data, Error>()
+            imageRequests.append((url, publisher))
+            return publisher.handleEvents(receiveCancel: { [weak self] in
                 self?.cancelledImageURLs.append(url)
-            }
+            }).eraseToAnyPublisher()
         }
         
         func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-            imageRequests[index].completion(.success(imageData))
+            imageRequests[index].publisher.send(imageData)
+            imageRequests[index].publisher.send(completion: .finished)
         }
         
         func completeImageLoadingWithError(at index: Int = 0) {
-            let error = NSError(domain: "an error", code: 0)
-            imageRequests[index].completion(.failure(error))
+            imageRequests[index].publisher.send(completion: .failure(anyNSError()))
         }
     }
 }
