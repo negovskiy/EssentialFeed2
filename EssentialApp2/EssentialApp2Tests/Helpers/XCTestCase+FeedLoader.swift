@@ -17,21 +17,16 @@ extension FeedLoaderTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let exp = expectation(description: "Wait for loading to complete.")
+        let receivedResult = Result { try sut.load() }
         
-        sut.load { receivedResult in
-            switch (receivedResult, expectedResult) {
-            case let (.success(receivedFeed), .success(expectedFeed)):
-                XCTAssertEqual(receivedFeed, expectedFeed, file: file, line: line)
-            case (.failure, .failure):
-                break
-                
-            default: XCTFail("Unexpected result", file: file, line: line)
-            }
+        switch (receivedResult, expectedResult) {
+        case let (.success(receivedFeed), .success(expectedFeed)):
+            XCTAssertEqual(receivedFeed, expectedFeed, file: file, line: line)
+        case (.failure, .failure):
+            break
             
-            exp.fulfill()
+        default: XCTFail("Unexpected result", file: file, line: line)
         }
         
-        wait(for: [exp], timeout: 1)
     }
 }

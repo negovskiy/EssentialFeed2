@@ -8,34 +8,32 @@
 import CoreData
 
 extension CoreDataFeedStore: FeedStore {
-    public func retrieve(completion: @escaping RetrievalCompletion) {
-        perform { context in
-            let result = Result {
+    public func retrieve() throws -> CachedFeed? {
+        try performSync { context in
+            Result {
                 try ManagedCache.find(in: context).map {
                     CachedFeed($0.localFeed, $0.timestamp)
                 }
             }
-            completion(result)
         }
     }
     
-    public func insert(_ feed: [LocalFeedImage], _ timestamp: Date, _ completion: @escaping InsertionCompletion) {
-        perform { context in
-            let result = Result {
+    public func insert(_ feed: [LocalFeedImage], _ timestamp: Date) throws {
+        try performSync { context in
+            Result {
                 let managedCache = try ManagedCache.newUniqueInstance(in: context)
                 managedCache.timestamp = timestamp
                 managedCache.feed = ManagedFeedImage.images(from: feed, in: context)
                 try context.save()
             }
-            completion(result)
         }
     }
     
-    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-        perform { context in
-            completion(Result {
+    public func deleteCachedFeed() throws {
+        try performSync { context in
+            Result {
                 try ManagedCache.find(in: context).map(context.delete)
-            })
+            }
         }
     }
 }

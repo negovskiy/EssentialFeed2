@@ -15,32 +15,32 @@ class FeedImageDataStoreSpy: FeedImageDataStore {
     }
     
     private(set) var receivedMessages: [Message] = []
-    private var retrievalCompletions: [(FeedImageDataStore.RetrievalResult) -> Void] = []
-    private var insertionCompletions: [(FeedImageDataStore.InsertionResult) -> Void] = []
+    private var retrievalResult: Result<Data?, Error>?
+    private var insertionResult: Result<Void, Error>?
     
-    func insert(_ data: Data, for url: URL, completion: @escaping (InsertionResult) -> Void) {
+    func insert(_ data: Data, for url: URL) throws {
         receivedMessages.append(.insert(data: data, for: url))
-        insertionCompletions.append(completion)
+        try insertionResult?.get()
     }
     
     func completeInsertion(with error: Error, at index: Int = 0) {
-        insertionCompletions[index](.failure(error))
+        insertionResult = (.failure(error))
     }
     
     func completeInsertionSuccessfully(at index: Int = 0) {
-        insertionCompletions[index](.success(()))
+        insertionResult = (.success(()))
     }
     
-    func retrieve(dataFor url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
-        retrievalCompletions.append(completion)
+    func retrieve(dataFor url: URL) throws -> Data? {
         receivedMessages.append(.retrieve(dataFor: url))
+        return try retrievalResult?.get()
     }
     
     func completeRetrieval(with data: Data?, at index: Int = 0) {
-        retrievalCompletions[index](.success(data))
+        retrievalResult = (.success(data))
     }
     
     func completeRetrieval(with error: Error, at index: Int = 0) {
-        retrievalCompletions[index](.failure(error))
+        retrievalResult = (.failure(error))
     }
 }
