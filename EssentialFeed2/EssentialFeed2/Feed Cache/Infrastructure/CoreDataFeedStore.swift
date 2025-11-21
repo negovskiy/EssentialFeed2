@@ -50,11 +50,8 @@ public final class CoreDataFeedStore {
         }
     }
     
-    func perform(_ action: @escaping (NSManagedObjectContext) -> Void) {
-        let context = self.context
-        context.perform {
-            action(context)
-        }
+    public func perform(_ action: @escaping () -> Void) {
+        context.perform(action)
     }
     
     private func cleanUpReferencesToPersistentStore() {
