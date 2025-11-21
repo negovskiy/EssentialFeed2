@@ -130,13 +130,13 @@ class FeedSnapshotTests: XCTestCase {
     }
     
     private func feedWithLoadMoreIndicator() -> [CellController] {
-        let loadMore = LoadMoreCellController()
+        let loadMore = LoadMoreCellController() {}
         loadMore.display(.init(isLoading: true))
         return feedWith(loadMore: loadMore)
     }
     
     private func feedWithLoadMoreError() -> [CellController] {
-        let loadMore = LoadMoreCellController()
+        let loadMore = LoadMoreCellController() {}
         loadMore.display(.init(message: "This is a \nmultiline error message"))
         return feedWith(loadMore: loadMore)
     }
