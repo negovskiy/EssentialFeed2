@@ -8,6 +8,7 @@
 import XCTest
 import EssentialFeed2
 
+@MainActor
 class CacheFeedUseCaseTests: XCTestCase {
     
     func test_init_doesNotMessageStoreUponCreation() {

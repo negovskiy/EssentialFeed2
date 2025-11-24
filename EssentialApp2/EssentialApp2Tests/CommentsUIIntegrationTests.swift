@@ -12,6 +12,7 @@ import EssentialFeed2
 import EssentialFeed2iOS
 import EssentialApp2
 
+@MainActor
 final class CommentsUIIntegrationTests: XCTestCase {
     
     func test_commentsView_hasTitle() {
