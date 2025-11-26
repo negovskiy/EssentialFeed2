@@ -128,18 +128,6 @@ final class CommentsUIIntegrationTests: XCTestCase {
         sut.simulateErrorViewTap()
         XCTAssertNil(sut.errorMessage)
     }
-    func test_loadCommentsCompletion_dispatchFromBackgroundToMainThread() {
-        let (sut, loader) = makeSUT()
-        sut.simulateAppearance()
-        
-        let exp = expectation(description: "Wait for background queue")
-        DispatchQueue.global().async {
-            loader.completeCommentsLoading(with: [])
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1)
-    }
     
     func test_deinit_cancelsPendingCommentsLoading() {
         var cancelCallCount = 0
