@@ -12,6 +12,7 @@ import EssentialFeed2iOS
 import EssentialApp2
 
 extension FeedUIIntegrationTests {
+    @MainActor
     class LoaderSpy {
         
         // MARK: - FeedLoader

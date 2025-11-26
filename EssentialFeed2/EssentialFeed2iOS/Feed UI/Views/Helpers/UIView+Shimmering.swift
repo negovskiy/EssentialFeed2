@@ -33,6 +33,10 @@ extension UIView {
     private class ShimmeringLayer: CAGradientLayer {
         private var observer: Any?
         
+        nonisolated override init() { super.init() }
+        nonisolated override init(layer: Any) { super.init(layer: layer) }
+        nonisolated required init?(coder: NSCoder) { super.init(coder: coder) }
+        
         convenience init(size: CGSize) {
             self.init()
             
@@ -56,8 +60,10 @@ extension UIView {
             animation.duration = 1.25
             animation.repeatCount = .infinity
             add(animation, forKey: "shimmer")
-            
-            observer = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { [weak self] _ in
+
+            observer = NotificationCenter.default.addObserver(
+                of: UIApplication.shared, for: .willEnterForeground
+            ) { [weak self] _ in
                 self?.add(animation, forKey: "shimmer")
             }
         }

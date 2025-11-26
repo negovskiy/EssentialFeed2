@@ -8,16 +8,17 @@
 import XCTest
 import EssentialFeed2
 
+@MainActor
 final class EssentialFeed2CacheIntegrationTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         
         setupEmptyStoreState()
     }
     
-    override func tearDown() {
-        super.tearDown()
+    override func tearDown() async throws {
+        try await super.tearDown()
         
         undoStoreSideEffects()
     }

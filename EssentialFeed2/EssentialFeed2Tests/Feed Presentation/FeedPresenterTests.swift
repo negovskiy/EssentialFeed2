@@ -8,6 +8,7 @@
 import XCTest
 import EssentialFeed2
 
+@MainActor
 class FeedPresenterTests: XCTestCase {
     
     func test_title_isLocalized() {

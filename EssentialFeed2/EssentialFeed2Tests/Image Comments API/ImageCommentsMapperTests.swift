@@ -8,6 +8,7 @@
 import XCTest
 import EssentialFeed2
 
+@MainActor
 final class ImageCommentsMapperTests: XCTestCase {
     func test_map_throwsErrorOnNon2xxHTTPResponse() {
         let samples = [199, 100, 300, 400, 500]

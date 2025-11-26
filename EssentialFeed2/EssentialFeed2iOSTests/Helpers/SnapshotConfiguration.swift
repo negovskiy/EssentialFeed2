@@ -7,6 +7,7 @@
 
 import UIKit
 
+@MainActor
 struct SnapshotConfiguration {
     // https://developer.apple.com/design/human-interface-guidelines/layout
     

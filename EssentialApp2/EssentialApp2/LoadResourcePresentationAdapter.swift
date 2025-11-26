@@ -9,6 +9,7 @@ import Combine
 import EssentialFeed2
 import EssentialFeed2iOS
 
+@MainActor 
 final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
     
     var presenter: LoadResourcePresenter<Resource, View>?
