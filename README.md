@@ -2,7 +2,7 @@
 
 [![CI iOS flow](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI_iOS.yml/badge.svg)](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI_iOS.yml)
 [![CI macOS flow](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI_macOS.yml/badge.svg)](https://github.com/negovskiy/EssentialFeed2/actions/workflows/CI_macOS.yml)
-[![Deploy flow](https://github.com/negovskiy/EssentialFeed2/actions/workflows/Deploy.yml/badge.svg)](https://github.com/negovskiy/EssentialFeed2/actions/workflows/Deploy.yml)
+[![Deploy](https://github.com/negovskiy/EssentialFeed2/actions/workflows/Deploy.yml/badge.svg?branch=main)](https://github.com/negovskiy/EssentialFeed2/actions/workflows/Deploy.yml)
 
 
 ## BDD Specs
