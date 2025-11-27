@@ -28,6 +28,10 @@ class HTTPClientStub: HTTPClient {
 		completion(stub(url))
 		return Task()
 	}
+    
+    func get(from url: URL) async throws -> (Data, HTTPURLResponse) {
+        try stub(url).get()
+    }
 }
 
 extension HTTPClientStub {
