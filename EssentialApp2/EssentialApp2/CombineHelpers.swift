@@ -35,18 +35,24 @@ public extension Paginated {
     }
 }
 
+@MainActor
 public extension HTTPClient {
     typealias Publisher = AnyPublisher<Data, Error>
     
     func getPublisher(url: URL) -> AnyPublisher<(Data, HTTPURLResponse), Error> {
-        var task: HTTPClientTask?
+        var task: Task<Void, Error>?
         
         return Deferred {
             Future { completion in
                 nonisolated(unsafe) let uncheckedCompletion = completion
-                task = self.get(from: url, completion: {
-                    uncheckedCompletion($0)
-                })
+                task = Task.immediate {
+                    do {
+                        let result = try await self.get(from: url)
+                        uncheckedCompletion(.success(result))
+                    } catch {
+                        uncheckedCompletion(.failure(error))
+                    }
+                }
             }
         }
         .handleEvents(receiveCancel: { task?.cancel() })
