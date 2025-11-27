@@ -16,8 +16,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         URLProtocolStub.removeStub()
     }
     
-    func test_getFromURL_performsGETRequestWithURL() {
-        
+    func test_getFromURL_performsGETRequestWithURL() async throws {
         let url = anyURL()
         let exp = expectation(description: "Wait for completion")
         
@@ -28,13 +27,13 @@ class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
         
-        makeSUT().get(from: url) { _ in }
-        
-        wait(for: [exp], timeout: 1.0)
+        _ = try await makeSUT().get(from: url)
+        await fulfillment(of: [exp], timeout: 1)
     }
     
     func test_cancelGetFromURLTask_cancelsURLRequest() async {
-        var task: HTTPClientTask?
+        var task: Task<(Data, HTTPURLResponse), Error>? = nil
+
         URLProtocolStub.onStartLoading {
             task?.cancel()
         }
@@ -100,53 +99,48 @@ class URLSessionHTTPClientTests: XCTestCase {
     
     private func resultErrorFor(
         _ values: (data: Data?, response: URLResponse?, error: Error?)? = nil,
-        taskHandler: (HTTPClientTask) -> Void = { _ in },
+        taskHandler: (Task<(Data, HTTPURLResponse), Error>) -> Void = { _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) async -> Error? {
-        
-        let result = await resultFor(values, taskHandler: taskHandler, file: file, line: line)
-        
-        switch result {
-        case let .failure(error):
-            return error
-        default:
+        do {
+            let result = try await resultFor(values, taskHandler: taskHandler, file: file, line: line)
             XCTFail("Expected a failure, got \(result)", file: file, line: line)
             return nil
+        } catch {
+            return error
         }
     }
     
     private func resultValuesFor(
         _ values: (data: Data?, response: URLResponse?, error: Error?)?,
-        taskHandler: (HTTPClientTask) -> Void = { _ in },
+        taskHandler: (Task<(Data, HTTPURLResponse), Error>) -> Void = { _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) async -> (data: Data, response: HTTPURLResponse)? {
-        let result = await resultFor(values, taskHandler: taskHandler, file: file, line: line)
-        
-        switch result {
-        case let .success((data, response)):
-            return (data, response)
-        default:
-            XCTFail("Expected a success, got \(result)", file: file, line: line)
+        do {
+            let result = try await resultFor(values, taskHandler: taskHandler, file: file, line: line)
+            return result
+        } catch {
+            XCTFail("Expected a success, got \(error)", file: file, line: line)
             return nil
         }
     }
     
     private func resultFor(
         _ values: (data: Data?, response: URLResponse?, error: Error?)?,
-        taskHandler: (HTTPClientTask) -> Void = { _ in },
+        taskHandler: (Task<(Data, HTTPURLResponse), Error>) -> Void = { _ in },
         file: StaticString = #filePath,
         line: UInt = #line
-    ) async -> HTTPClient.Result {
+    ) async throws -> (Data, HTTPURLResponse) {
         values.map { URLProtocolStub.stub(data: $0, response: $1, error: $2) }
         
         let sut = makeSUT(file: file, line: line)
-        return await withCheckedContinuation { continuation in
-            taskHandler(sut.get(from: anyURL()) { result in
-                continuation.resume(returning: result)
-            })
+        let task = Task {
+            try await sut.get(from: anyURL())
         }
+        taskHandler(task)
+        return try await task.value
     }
     
     private func nonHTTPURLResponse() -> URLResponse {
