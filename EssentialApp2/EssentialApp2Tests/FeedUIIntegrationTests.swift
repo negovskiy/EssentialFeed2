@@ -22,7 +22,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(sut.title, feedTitle)
     }
     
-    func test_imageSelection_notifiedHandler() {
+    func test_imageSelection_notifiedHandler() async throws {
         let image0 = makeImage()
         let image1 = makeImage()
         var selectedImages = [FeedImage]()
@@ -256,7 +256,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected image URL loads for both views")
     }
     
-    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() {
+    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() async throws {
         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
@@ -266,9 +266,13 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no image URL cancels yet")
         
         sut.simulateFeedImageViewNotVisible(at: 0)
+        let result0 = try await loader.imageResult(at: 0)
+        XCTAssertEqual(result0, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected image URL cancel for first view")
         
         sut.simulateFeedImageViewNotVisible(at: 1)
+        let result1 = try await loader.imageResult(at: 1)
+        XCTAssertEqual(result1, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected image URL cancel for both views")
     }
     
@@ -293,6 +297,10 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeImageLoadingWithError(at: 1)
         XCTAssertEqual(view0?.isShowingImageLoadingIndicator, false, "Expected loading indicator to be hidden for first view")
         XCTAssertEqual(view1?.isShowingImageLoadingIndicator, false, "Expected loading indicator to be hidden for second view")
+        
+        view1?.simulateRetryAction()
+        XCTAssertEqual(view0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator state change for first view once second image loading completes with error")
+        XCTAssertEqual(view1?.isShowingImageLoadingIndicator, true, "Expected loading indicator state change for second view on retry action")
     }
     
     func test_feedImageView_rendersImageLoadedFromURL() {
@@ -393,7 +401,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected image load for second image")
     }
     
-    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() {
+    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() async throws {
         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
@@ -403,9 +411,13 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image loads yet")
         
         sut.simulateFeedImageViewNotNearVisible(at: 0)
+        let result0 = try await loader.imageResult(at: 0)
+        XCTAssertEqual(result0, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected cancelled image load for first image")
         
         sut.simulateFeedImageViewNotNearVisible(at: 1)
+        let result1 = try await loader.imageResult(at: 1)
+        XCTAssertEqual(result1, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected cancelled image load for second image")
     }
     
@@ -496,12 +508,16 @@ class FeedUIIntegrationTests: XCTestCase {
         let loader = LoaderSpy()
         let sut = FeedUIComposer.feedComposedWith(
             feedLoader: loader.loadPublisher,
-            imageLoader: loader.loadImageDataPublisher,
+            imageLoader: loader.loadImageData,
             selection: selection
         )
         
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
+        
+        addTeardownBlock { [weak loader] in
+            try await loader?.cancelPendingRequests()
+        }
         
         return (sut, loader)
     }
