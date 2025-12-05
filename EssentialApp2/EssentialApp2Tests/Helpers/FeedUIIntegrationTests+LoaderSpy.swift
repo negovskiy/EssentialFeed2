@@ -1,32 +1,25 @@
 //
-//  FeedUIIntegrationTests+LoaderSpy.swift
-//  EssentialFeed2
-//
-//  Created by Andrey Negovskiy on 6/29/25.
+//  Copyright © Essential Developer. All rights reserved.
 //
 
 import Foundation
-import Combine
 import EssentialFeed2
 import EssentialFeed2iOS
 import EssentialApp2
+import Combine
 
 extension FeedUIIntegrationTests {
+    
     @MainActor
     class LoaderSpy {
         
         // MARK: - FeedLoader
         
+        private var feedRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
+        
         var loadFeedCallCount: Int {
-            feedRequests.count
+            return feedRequests.count
         }
-        
-        var loadMoreCallCount: Int {
-            loadMoreRequests.count
-        }
-        
-        private var feedRequests: [PassthroughSubject<Paginated<FeedImage>, Error>] = []
-        private var loadMoreRequests: [PassthroughSubject<Paginated<FeedImage>, Error>] = []
         
         func loadPublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
             let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
@@ -34,123 +27,77 @@ extension FeedUIIntegrationTests {
             return publisher.eraseToAnyPublisher()
         }
         
+        func completeFeedLoadingWithError(at index: Int = 0) {
+            feedRequests[index].send(completion: .failure(anyNSError()))
+        }
+        
         func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
             feedRequests[index].send(Paginated(items: feed, loadMorePublisher: { [weak self] in
-                let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
-                self?.loadMoreRequests.append(publisher)
-                return publisher.eraseToAnyPublisher()
+                self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
             }))
             feedRequests[index].send(completion: .finished)
         }
         
-        func completeFeedLoadingWithError(at index: Int) {
-            let error = NSError(domain: "an error", code: 0)
-            feedRequests[index].send(completion: (.failure(error)))
+        // MARK: - LoadMoreFeedLoader
+        
+        private var loadMoreRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
+        
+        var loadMoreCallCount: Int {
+            return loadMoreRequests.count
+        }
+        
+        func loadMorePublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
+            let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
+            loadMoreRequests.append(publisher)
+            return publisher.eraseToAnyPublisher()
         }
         
         func completeLoadMore(with feed: [FeedImage] = [], lastPage: Bool = false, at index: Int = 0) {
             loadMoreRequests[index].send(Paginated(
-                items: feed,
-                loadMorePublisher: lastPage ? nil : { [weak self] in
-                    let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
-                    self?.loadMoreRequests.append(publisher)
-                    return publisher.eraseToAnyPublisher()
-                }))
+                                            items: feed,
+                                            loadMorePublisher: lastPage ? nil : { [weak self] in
+                                                self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
+                                            }))
         }
         
         func completeLoadMoreWithError(at index: Int = 0) {
-            let error = NSError(domain: "an error", code: 0)
-            loadMoreRequests[index].send(completion: (.failure(error)))
+            loadMoreRequests[index].send(completion: .failure(anyNSError()))
         }
         
-        // MARK: - ImageDataLoader
+        // MARK: - FeedImageDataLoader
         
-        enum AsyncResult {
-            case success
-            case failure
-            case cancelled
-        }
-        
-        struct NoResponse: Error {}
-        struct Timeout: Error {}
-        
-        private var imageRequests = [(
-            url: URL,
-            publisher: AsyncThrowingStream<Data, Error>,
-            continuation: AsyncThrowingStream<Data, Error>.Continuation,
-            result: AsyncResult?
-        )]()
+        private var imageLoader = EssentialApp2Tests.LoaderSpy<URL, Data>()
         
         var loadedImageURLs: [URL] {
-            return imageRequests.map { $0.url }
+            return imageLoader.requests.map { $0.param }
         }
         
-        private(set) var cancelledImageURLs = [URL]()
+        var cancelledImageURLs: [URL] {
+            return imageLoader.requests.filter({ $0.result == .cancelled }).map { $0.param }
+        }
+        
+        private struct NoResponse: Error {}
+        private struct Timeout: Error {}
         
         func loadImageData(from url: URL) async throws -> Data {
-            let (stream, continuation) = AsyncThrowingStream<Data, Error>.makeStream()
-            let index = imageRequests.count
-            imageRequests.append((url, stream, continuation, nil))
-            
-            do {
-                for try await result in stream {
-                    try Task.checkCancellation()
-                    imageRequests[index].result = .success
-                    return result
-                }
-                
-                try Task.checkCancellation()
-                throw NoResponse()
-            } catch {
-                if Task.isCancelled {
-                    cancelledImageURLs.append(url)
-                    imageRequests[index].result = .cancelled
-                } else {
-                    imageRequests[index].result = .failure
-                }
-                throw error
-            }
+            try await imageLoader.load(url)
         }
         
         func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-            imageRequests[index].continuation.yield(imageData)
-            imageRequests[index].continuation.finish()
-
-            while imageRequests[index].result == nil {
-                RunLoop.current.run(until: Date())
-            }
+            imageLoader.complete(with: imageData, at: index)
         }
         
         func completeImageLoadingWithError(at index: Int = 0) {
-            imageRequests[index].continuation.finish(throwing: anyNSError())
-
-            while imageRequests[index].result == nil {
-                RunLoop.current.run(until: Date())
-            }
+            imageLoader.fail(with: anyNSError(), at: index)
         }
         
         func imageResult(at index: Int, timeout: TimeInterval = 1) async throws -> AsyncResult {
-            let maxDate = Date() + timeout
-            
-            while Date() <= maxDate {
-                if let result = imageRequests[index].result {
-                    return result
-                }
-                
-                await Task.yield()
-            }
-            
-            throw Timeout()
+            try await imageLoader.result(at: index, timeout: timeout)
         }
         
         func cancelPendingRequests() async throws {
-            for (index, request) in imageRequests.enumerated() where request.result == nil {
-                request.continuation.finish(throwing: CancellationError())
-
-                while imageRequests[index].result == nil {
-                    await Task.yield()
-                }
-            }
+            try await imageLoader.cancelPendingRequests()
         }
     }
+    
 }
