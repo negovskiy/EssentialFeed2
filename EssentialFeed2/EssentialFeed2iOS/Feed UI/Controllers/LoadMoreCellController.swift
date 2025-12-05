@@ -1,16 +1,14 @@
 //
-//  LoadMoreCellController.swift
-//  EssentialFeed2
-//
-//  Created by Andrey Negovskiy on 11/5/25.
+// Copyright © Essential Developer. All rights reserved.
 //
 
 import UIKit
 import EssentialFeed2
 
-public final class LoadMoreCellController: NSObject, UITableViewDelegate, UITableViewDataSource {
+public class LoadMoreCellController: NSObject, UITableViewDataSource, UITableViewDelegate {
     private let cell = LoadMoreCell()
     private let callback: () -> Void
+    private var offsetObserver: NSKeyValueObservation?
     
     public init(callback: @escaping () -> Void) {
         self.callback = callback
@@ -27,6 +25,18 @@ public final class LoadMoreCellController: NSObject, UITableViewDelegate, UITabl
     
     public func tableView(_ tableView: UITableView, willDisplay: UITableViewCell, forRowAt indexPath: IndexPath) {
         reloadIfNeeded()
+        
+        offsetObserver = tableView.observe(\.contentOffset, options: .new) { [weak self] (tableView, _) in
+            MainActor.assumeIsolated {
+                guard tableView.isDragging else { return }
+                
+                self?.reloadIfNeeded()
+            }
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        offsetObserver = nil
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -35,18 +45,17 @@ public final class LoadMoreCellController: NSObject, UITableViewDelegate, UITabl
     
     private func reloadIfNeeded() {
         guard !cell.isLoading else { return }
+        
         callback()
     }
 }
 
-extension LoadMoreCellController: ResourceLoadingView {
-    public func display(_ viewModel: ResourceLoadingViewModel) {
-        cell.isLoading = viewModel.isLoading
-    }
-}
-
-extension LoadMoreCellController: ResourceErrorView {
+extension LoadMoreCellController: ResourceLoadingView, ResourceErrorView {
     public func display(_ viewModel: ResourceErrorViewModel) {
         cell.message = viewModel.message
+    }
+    
+    public func display(_ viewModel: ResourceLoadingViewModel) {
+        cell.isLoading = viewModel.isLoading
     }
 }

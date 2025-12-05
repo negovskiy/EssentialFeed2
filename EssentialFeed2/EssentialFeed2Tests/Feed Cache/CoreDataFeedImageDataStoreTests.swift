@@ -10,14 +10,14 @@ import EssentialFeed2
 
 @MainActor
 class CoreDataFeedImageDataStoreTests: XCTestCase {
-    func test_retrieveImageData_deliversNotFoundWhenEmpty() throws {
-        try makeSUT { sut in
+    func test_retrieveImageData_deliversNotFoundWhenEmpty() async throws {
+        try await makeSUT { sut in
             expect(sut, toCompleteRetrievedWith: notFound(), for: anyURL())
         }
     }
     
-    func test_retrieveImageData_deliversNotFoundWhenStoreDataURLDoesNotMatch() throws {
-        try makeSUT { sut in
+    func test_retrieveImageData_deliversNotFoundWhenStoreDataURLDoesNotMatch() async throws {
+        try await makeSUT { sut in
             let url = anyURL()
             let nonMatchingURL = URL(string: "https://another-url.com")!
             
@@ -27,8 +27,8 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
         }
     }
     
-    func test_retrieveImageData_deliversFoundDataWhenStoreHasDataForMatchingURL() throws {
-        try makeSUT { sut in
+    func test_retrieveImageData_deliversFoundDataWhenStoreHasDataForMatchingURL() async throws {
+        try await makeSUT { sut in
             let matchingURL = anyURL()
             let storedData = anyData()
             
@@ -38,8 +38,8 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
         }
     }
     
-    func test_retrieveImageData_deliversLastInsertedValue() throws {
-        try makeSUT { sut in
+    func test_retrieveImageData_deliversLastInsertedValue() async throws {
+        try await makeSUT { sut in
             let matchingURL = anyURL()
             let firstData = Data("first chunk".utf8)
             let secondData = Data("first chunk".utf8)
@@ -57,12 +57,15 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
         storeURL: URL? = nil,
         file: StaticString = #filePath,
         line: UInt = #line,
-        _ action: (CoreDataFeedStore) throws -> Void
-    ) throws {
+        _ action: @Sendable @escaping (CoreDataFeedStore) throws -> Void
+    ) async throws {
         let storeURL = URL(fileURLWithPath: "/dev/null")
         let sut = try CoreDataFeedStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
-        try action(sut)
+        
+        try await sut.perform {
+            try action(sut)
+        }
     }
 }
 

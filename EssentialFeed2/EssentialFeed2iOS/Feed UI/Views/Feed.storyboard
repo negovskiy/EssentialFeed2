@@ -134,6 +134,11 @@ Location</string>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="UNR-fX-mxa" id="mDT-9P-fKr"/>
+                            <outlet property="delegate" destination="UNR-fX-mxa" id="sFG-8l-Tzj"/>
+                            <outlet property="prefetchDataSource" destination="UNR-fX-mxa" id="9XQ-fL-7iO"/>
+                        </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="2jc-h7-WZ2">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
