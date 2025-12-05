@@ -58,10 +58,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         LocalFeedLoader(currentDate: Date.init, store: store)
     }()
     
-    private lazy var localImageLoader: LocalFeedImageDataLoader = {
-        LocalFeedImageDataLoader(store: store)
-    }()
-    
     private lazy var navigationController = UINavigationController(
         rootViewController: FeedUIComposer.feedComposedWith(
             feedLoader: makeRemoteFeedLoaderWithFallbackToLocal,
