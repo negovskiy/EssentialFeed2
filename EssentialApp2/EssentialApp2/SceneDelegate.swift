@@ -50,7 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } catch {
             assertionFailure("Failed to instantiate CoreDataFeedStore: \(error.localizedDescription)")
             logger.fault("Failed to instantiate CoreDataFeedStore: \(error.localizedDescription)")
-            return NullStore()
+            return InMemoryFeedStore()
         }
     }()
     
@@ -204,7 +204,7 @@ extension CoreDataFeedStore: StoreScheduler {
     }
 }
 
-extension NullStore: StoreScheduler {
+extension InMemoryFeedStore: StoreScheduler {
     @MainActor
     func schedule<T>(_ action: @escaping () throws -> T) async rethrows -> T {
         try action()
