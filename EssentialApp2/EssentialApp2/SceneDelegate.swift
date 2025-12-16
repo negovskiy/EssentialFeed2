@@ -97,13 +97,54 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 private extension SceneDelegate {
+    private func loadRemoteFeedWithLocalFallback() async throws -> Paginated<FeedImage> {
+        do {
+            let feed = try await loadAndCacheRemoteFeed()
+            return makeFirstPage(feed)
+        } catch {
+            let feed = try await loadLocalFeed()
+            return makeFirstPage(feed)
+        }
+    }
+    
+    private func loadAndCacheRemoteFeed() async throws -> [FeedImage] {
+        let feed = try await loadRemoteFeed()
+        
+        await store.schedule { [store] in
+            let loader = LocalFeedLoader(currentDate: Date.init, store: store)
+            try? loader.save(feed)
+        }
+        
+        return feed
+    }
+    
+    private func loadLocalFeed() async throws -> [FeedImage] {
+        try await store.schedule { [store] in
+            let loader = LocalFeedLoader(currentDate: Date.init, store: store)
+            return try loader.load()
+        }
+    }
+    
+    private func loadRemoteFeed(after last: FeedImage? = nil) async throws -> [FeedImage] {
+        let url = FeedEndpoint.get(after: last).url(from: remoteURL)
+        let (data, response) = try await httpClient.get(from: url)
+        return try FeedItemsMapper.map(data, response)
+    }
+    
     private func makeRemoteFeedLoaderWithFallbackToLocal() -> AnyPublisher<Paginated<FeedImage>, Error> {
-        makeRemoteFeedLoader()
-            .receive(on: scheduler)
-            .caching(to: localFeedLoader)
-            .fallback(to: localFeedLoader.loadPublisher)
-            .map(makeFirstPage)
-            .eraseToAnyPublisher()
+        Deferred {
+            Future { promise in
+                Task.immediate {
+                    do {
+                        let feed = try await self.loadRemoteFeedWithLocalFallback()
+                        promise(.success(feed))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
     
     private func makeRemoteLoadMoreLoader(last: FeedImage? = nil) -> AnyPublisher<Paginated<FeedImage>, Error> {
