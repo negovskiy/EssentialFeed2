@@ -5,7 +5,6 @@
 import Foundation
 import EssentialFeed2
 import EssentialFeed2iOS
-import EssentialApp2
 
 extension FeedUIIntegrationTests {
     
@@ -30,11 +29,12 @@ extension FeedUIIntegrationTests {
         
         func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) async {
             await feedLoader.complete(
-                with: Paginated(items: feed, loadMore: { @MainActor [weak self] in
-                    try await self?.loadMore() ?? Paginated(items: [])
-                }),
-                at: index
-            )
+                with: Paginated(
+                    items: feed,
+                    loadMore: { @MainActor [weak self] in
+                        try await self?.loadMore() ?? Paginated(items: [])
+                    }),
+                at: index)
         }
         
         // MARK: - LoadMoreFeedLoader
@@ -54,10 +54,11 @@ extension FeedUIIntegrationTests {
                 try await self?.loadMore() ?? Paginated(items: [])
             }
             
-            await feedLoader.complete(
-                with: Paginated(items: feed, loadMore: lastPage ? nil : loadMore),
-                at: index
-            )
+            await loadMoreLoader.complete(
+                with: Paginated(
+                    items: feed,
+                    loadMore: lastPage ? nil : loadMore),
+                at: index)
         }
         
         func completeLoadMoreWithError(at index: Int = 0) async {
