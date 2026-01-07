@@ -5,13 +5,11 @@
 //  Created by Andrey Negovskiy on 11/5/25.
 //
 
-public struct Paginated<Item> {
-    public typealias LoadMoreCompletion = (Result<Self, Error>) -> Void
-    
+public struct Paginated<Item: Sendable>: Sendable {
     public let items: [Item]
-    public let loadMore: ((@escaping LoadMoreCompletion) -> Void)?
+    public let loadMore: (@Sendable () async throws -> Self)?
     
-    public init(items: [Item], loadMore: ((@escaping LoadMoreCompletion) -> Void)? = nil) {
+    public init(items: [Item], loadMore: (@Sendable () async throws -> Self)? = nil) {
         self.items = items
         self.loadMore = loadMore
     }

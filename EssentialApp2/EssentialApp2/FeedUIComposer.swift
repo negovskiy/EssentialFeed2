@@ -5,7 +5,6 @@
 //  Created by Andrey Negovskiy on 6/26/25.
 //
 
-import Combine
 import UIKit
 import EssentialFeed2
 import EssentialFeed2iOS
@@ -13,12 +12,12 @@ import EssentialFeed2iOS
 @MainActor
 public enum FeedUIComposer {
     public static func feedComposedWith(
-        feedLoader: @MainActor @escaping () -> AnyPublisher<Paginated<FeedImage>, Error>,
+        feedLoader: @MainActor @escaping () async throws -> Paginated<FeedImage>,
         imageLoader: @MainActor @escaping (URL) async throws -> Data,
         selection: @MainActor @escaping (FeedImage) -> Void = { _ in }
     ) -> ListViewController {
         let presentationAdapter =
-        LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>(loader: feedLoader)
+        AsyncLoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>(loader: feedLoader)
         let feedController = makeWith(title: FeedPresenter.title)
         feedController.onRefresh = presentationAdapter.loadResource
         

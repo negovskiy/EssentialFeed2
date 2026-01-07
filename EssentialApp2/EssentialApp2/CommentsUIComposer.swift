@@ -5,18 +5,18 @@
 //  Created by Andrey Negovskiy on 10/27/25.
 //
 
-import Combine
 import UIKit
 import EssentialFeed2
 import EssentialFeed2iOS
 
 @MainActor
 public enum CommentsUIComposer {
+    private typealias CommentsPresentationAdapter = AsyncLoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
+    
     public static func commentsComposedWith(
-        commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
+        commentsLoader: @escaping () async throws -> [ImageComment]
     ) -> ListViewController {
-        let presentationAdapter =
-        LoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>(loader: commentsLoader)
+        let presentationAdapter = CommentsPresentationAdapter(loader: commentsLoader)
         let commentsController = makeWith(title: ImageCommentsPresenter.title)
         commentsController.onRefresh = presentationAdapter.loadResource
         
