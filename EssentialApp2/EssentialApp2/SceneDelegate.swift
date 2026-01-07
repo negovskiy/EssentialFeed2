@@ -5,7 +5,6 @@
 //  Created by Andrey Negovskiy on 11/8/25.
 //
 
-import Combine
 import CoreData
 import os
 import UIKit
@@ -189,17 +188,14 @@ private extension SceneDelegate {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
     }
     
-    private func makeRemoteCommentsLoader(for image: FeedImage) -> () -> AnyPublisher<[ImageComment], Error> {
-        { [httpClient, remoteURL] in
-            httpClient
-                .getPublisher(url: remoteURL.appending(path: "v1/image/\(image.id.uuidString)/comments"))
-                .tryMap(ImageCommentsMapper.map)
-                .eraseToAnyPublisher()
-        }
+    private func loadComments(from url: URL) async throws -> [ImageComment] {
+        let (data, response) = try await httpClient.get(from: url)
+        return try ImageCommentsMapper.map(data, response)
     }
     private func showComments(for image: FeedImage) {
+        let url = ImageCommentsEndpoint.get(image.id).url(baseURL: remoteURL)
         let comments = CommentsUIComposer.commentsComposedWith(
-            commentsLoader: makeRemoteCommentsLoader(for: image)
+            commentsLoader: loadComments(from: url)
         )
         navigationController.show(comments, sender: self)
     }
