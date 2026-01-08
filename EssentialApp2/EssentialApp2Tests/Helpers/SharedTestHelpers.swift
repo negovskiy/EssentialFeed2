@@ -32,6 +32,7 @@ class DummyView: ResourceView {
     func display(_ viewModel: ResourceViewModel) {}
 }
 
+@MainActor
 var errorMessage: String {
     LoadResourcePresenter<Any, DummyView>.loadError
 }
