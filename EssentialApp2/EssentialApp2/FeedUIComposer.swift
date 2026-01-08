@@ -17,7 +17,7 @@ public enum FeedUIComposer {
         selection: @MainActor @escaping (FeedImage) -> Void = { _ in }
     ) -> ListViewController {
         let presentationAdapter =
-        AsyncLoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>(loader: feedLoader)
+        LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>(loader: feedLoader)
         let feedController = makeWith(title: FeedPresenter.title)
         feedController.onRefresh = presentationAdapter.loadResource
         
