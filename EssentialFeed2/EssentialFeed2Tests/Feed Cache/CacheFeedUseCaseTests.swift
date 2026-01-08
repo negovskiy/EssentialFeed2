@@ -70,7 +70,7 @@ class CacheFeedUseCaseTests: XCTestCase {
     
     private func makeSUT(
         currentDate: @escaping () -> Date = Date.init,
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line
     ) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         
@@ -87,7 +87,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         _ sut: LocalFeedLoader,
         toCompeteWithError expectedError: NSError?,
         when action: () -> Void,
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line
     ) {
         action()

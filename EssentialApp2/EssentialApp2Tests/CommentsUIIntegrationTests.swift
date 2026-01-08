@@ -86,8 +86,6 @@ final class CommentsUIIntegrationTests: XCTestCase {
         sut.simulateUserInitiatedListReload()
         await loader.completeCommentsLoading(with: [], at: 1)
         assertThat(sut, isRendering: [ImageComment]())
-        
-        RunLoop.main.run(until: .now + 1)
     }
     
     func test_loadCommentCompletion_doesNotAlterCurrentRenderingStateOnError() async {

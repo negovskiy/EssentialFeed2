@@ -14,7 +14,7 @@ extension FeedLoaderTestCase {
     func expect(
         _ sut: LocalFeedLoader,
         toCompleteWith expectedResult: Swift.Result<[FeedImage], Error>,
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line
     ) {
         let receivedResult = Result { try sut.load() }
