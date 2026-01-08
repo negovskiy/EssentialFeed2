@@ -8,7 +8,7 @@
 import XCTest
 
 extension XCTestCase {
-    func record(snapshot data: Data, named name: String, file: StaticString = #file, line: UInt = #line) {
+    func record(snapshot data: Data, named name: String, file: StaticString = #filePath, line: UInt = #line) {
         let snapshotURL = makeSnapshotURL(for: name, file: file)
         
         do {
@@ -27,7 +27,7 @@ extension XCTestCase {
     func assert(
         snapshot expectedData: Data,
         named name: String,
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line
     ) {
         let snapshotURL = makeSnapshotURL(for: name, file: file)

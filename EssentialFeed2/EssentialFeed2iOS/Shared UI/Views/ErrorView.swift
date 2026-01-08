@@ -34,10 +34,6 @@ public final class ErrorView: UIButton {
         super.init(coder: coder)
     }
     
-    public override func awakeFromNib() {
-        hideMessage()
-    }
-    
     private func configure() {
         hideMessage()
         backgroundColor = .errorBackgroundColor

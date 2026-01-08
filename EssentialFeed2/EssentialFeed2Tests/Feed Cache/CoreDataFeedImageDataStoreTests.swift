@@ -85,7 +85,7 @@ private func expect(
     _ sut: CoreDataFeedStore,
     toCompleteRetrievedWith expectedResult: Result<Data?, Error>,
     for url: URL,
-    file: StaticString = #file,
+    file: StaticString = #filePath,
     line: UInt = #line
 ) {
     let receivedResult = Result { try sut.retrieve(dataFor: url) }
@@ -101,7 +101,7 @@ private func insert(
     _ data: Data,
     for url: URL,
     into sut: CoreDataFeedStore,
-    file: StaticString = #file,
+    file: StaticString = #filePath,
     line: UInt = #line
 ) {
     do {

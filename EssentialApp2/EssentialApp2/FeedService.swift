@@ -1,0 +1,146 @@
+//
+//  FeedService.swift
+//  EssentialApp2
+//
+//  Created by Andrey Negovskiy on 1/8/26.
+//
+
+import os
+import CoreData
+import EssentialFeed2
+
+@MainActor
+    final class FeedService {
+        private lazy var httpClient: HTTPClient = {
+            URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+        }()
+        
+        private lazy var logger = Logger(subsystem: "com.essentialdeveloper.EssentialAppCaseStudy", category: "main")
+        
+        private lazy var store: FeedStore & FeedImageDataStore & Scheduler & Sendable = {
+            do {
+                return try CoreDataFeedStore(
+                    storeURL: NSPersistentContainer
+                        .defaultDirectoryURL()
+                        .appendingPathComponent("feed-store.sqlite"))
+            } catch {
+                assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+                logger.fault("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+                return InMemoryFeedStore()
+            }
+        }()
+        
+        private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+        
+        convenience init(
+            httpClient: HTTPClient,
+            store: FeedStore & FeedImageDataStore & Scheduler & Sendable
+        ) {
+            self.init()
+            self.httpClient = httpClient
+            self.store = store
+        }
+        
+        func validateCache() {
+            Task.immediate { @MainActor in
+                await store.schedule { [store, logger] in
+                    do {
+                        let localFeedLoader = LocalFeedLoader(currentDate: Date.init, store: store)
+                        try localFeedLoader.validateCache()
+                    } catch {
+                        logger.error("Failed to validate cache with error: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        
+        func loadComments(for image: FeedImage) -> () async throws -> [ImageComment] {
+            let url = ImageCommentsEndpoint.get(image.id).url(baseURL: baseURL)
+            return { [httpClient] in
+                let (data, response) = try await httpClient.get(from: url)
+                return try ImageCommentsMapper.map(data, response)
+            }
+        }
+        
+        func loadRemoteFeedWithLocalFallback() async throws -> Paginated<FeedImage> {
+            do {
+                let feed = try await loadAndCacheRemoteFeed()
+                return makeFirstPage(items: feed)
+            } catch {
+                let feed = try await loadLocalFeed()
+                return makeFirstPage(items: feed)
+            }
+        }
+        
+        func loadAndCacheRemoteFeed() async throws -> [FeedImage] {
+            let feed = try await loadRemoteFeed()
+            await store.schedule { [store] in
+                let localFeedLoader = LocalFeedLoader(currentDate: Date.init, store: store)
+                try? localFeedLoader.save(feed)
+            }
+            return feed
+        }
+        
+        private func loadLocalFeed() async throws -> [FeedImage] {
+            try await store.schedule { [store] in
+                let localFeedLoader = LocalFeedLoader(currentDate: Date.init, store: store)
+                return try localFeedLoader.load()
+            }
+        }
+        
+        private func loadRemoteFeed(after: FeedImage? = nil) async throws -> [FeedImage] {
+            let url = FeedEndpoint.get(after: after).url(from: baseURL)
+            let (data, response) = try await httpClient.get(from: url)
+            return try FeedItemsMapper.map(data, response)
+        }
+        
+        private func loadMoreRemoteFeed(last: FeedImage?) async throws -> Paginated<FeedImage> {
+            async let cachedItems = try await loadLocalFeed()
+            async let newItems = try await loadRemoteFeed(after: last)
+            
+            let items = try await cachedItems + newItems
+            
+            await store.schedule { [store] in
+                let localFeedLoader = LocalFeedLoader(currentDate: Date.init, store: store)
+                try? localFeedLoader.save(items)
+            }
+            
+            return try await makePage(items: items, last: newItems.last)
+        }
+        
+        private func makeFirstPage(items: [FeedImage]) -> Paginated<FeedImage> {
+            makePage(items: items, last: items.last)
+        }
+        
+        private func makePage(items: [FeedImage], last: FeedImage?) -> Paginated<FeedImage> {
+            Paginated(items: items, loadMore: last.map { last in
+                { @MainActor @Sendable in try await self.loadMoreRemoteFeed(last: last) }
+            })
+        }
+        
+        func loadLocalImageWithRemoteFallback(url: URL) async throws -> Data {
+            do {
+                return try await loadLocalImage(url: url)
+            } catch {
+                return try await loadAndCacheRemoteImage(url: url)
+            }
+        }
+        
+        private func loadLocalImage(url: URL) async throws -> Data {
+            try await store.schedule { [store] in
+                let localImageLoader = LocalFeedImageDataLoader(store: store)
+                let imageData = try localImageLoader.loadImageData(from: url)
+                return imageData
+            }
+        }
+        
+        private func loadAndCacheRemoteImage(url: URL) async throws -> Data {
+            let (data, response) = try await httpClient.get(from: url)
+            let imageData = try FeedImageDataMapper.map(data, response)
+            await store.schedule { [store] in
+                let localImageLoader = LocalFeedImageDataLoader(store: store)
+                try? localImageLoader.saveImageData(data, for: url)
+            }
+            return imageData
+        }
+    }

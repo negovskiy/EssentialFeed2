@@ -42,7 +42,7 @@ final class ListSnapshotTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> ListViewController {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> ListViewController {
         let controller = ListViewController()
         controller.loadViewIfNeeded()
         controller.tableView.showsVerticalScrollIndicator = false

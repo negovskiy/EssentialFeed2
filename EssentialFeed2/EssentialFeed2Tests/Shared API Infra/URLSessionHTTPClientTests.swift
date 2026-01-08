@@ -153,7 +153,7 @@ class URLSessionHTTPClientTests: XCTestCase {
 private func assertNotNil(
     _ value: Any?,
     _ message: @autoclosure () -> String = "",
-    file: StaticString = #file,
+    file: StaticString = #filePath,
     line: UInt = #line
 ) {
     XCTAssertNotNil(value, message(), file: file, line: line)

@@ -46,7 +46,7 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
     // MARK: - Helpers
     private func makeSUT(
         currentDate: @escaping () -> Date = Date.init,
-        file: String = #file,
+        file: String = #filePath,
         line: UInt = #line
     ) -> (LocalFeedImageDataLoader, FeedImageDataStoreSpy)  {
         let storeSpy = FeedImageDataStoreSpy()

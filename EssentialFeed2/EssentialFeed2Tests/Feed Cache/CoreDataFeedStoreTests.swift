@@ -9,7 +9,7 @@ import XCTest
 import EssentialFeed2
 
 @MainActor
-final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
+class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
     func test_retrieve_deliversEmptyOnEmptyCache() async throws {
         try await makeSUT() { sut in
             assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
@@ -79,8 +79,7 @@ final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
     // MARK: - Helpers
     
     private func makeSUT(
-        storeURL: URL? = nil,
-        test: @Sendable @escaping (CoreDataFeedStore) -> Void,
+        _ test: @Sendable @escaping (CoreDataFeedStore) -> Void,
         file: StaticString = #filePath,
         line: UInt = #line
     ) async throws {
